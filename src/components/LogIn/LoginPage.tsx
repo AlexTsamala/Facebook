@@ -3,7 +3,6 @@ import ResentLogIns from "./RecentLogIns";
 import "./logIn.css";
 import CreateAccountModal from "../createAccount/CreateAccountModal";
 import { useState } from "react";
-import { users, addUser, deleteUser } from "../../../fireBaseConfig";
 
 interface LogInDto {
   user: string | number;
@@ -18,15 +17,6 @@ const LoginPage = () => {
   } = useForm<LogInDto>();
   const onSubmit: SubmitHandler<LogInDto> = (data) => console.log(data);
   const [createIsOpen, setCreateIsOpen] = useState<boolean>(false);
-
-  // addUser();
-  // deleteUser();
-
-  console.log(
-    users?.map((item: any) => {
-      console.log(item);
-    })
-  );
 
   return (
     <div className="logIn-container">
