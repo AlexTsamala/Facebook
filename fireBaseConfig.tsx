@@ -6,9 +6,16 @@ import {
   addDoc,
   deleteDoc,
   doc,
+  query,
+  where,
 } from "firebase/firestore";
 import { UserDto } from "./src/dto/UsersDto";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signOut,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD8vnnCw4qF-_3X7mwkcFl5remrbfzffco",
@@ -44,6 +51,23 @@ export const users = await getDocs(colRef)
     console.log(err.message);
   });
 
+export const oneUser = async (email: string) => {
+  const q = query(colRef, where("email", "==", email));
+  const users: UserDto[] = [];
+  await getDocs(q)
+    .then((snapShot) => {
+      snapShot.docs.forEach((doc) => {
+        const userData = doc.data() as UserDto;
+        const user: UserDto & dtoId = { id: doc.id, ...userData };
+        users.push(user);
+      });
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
+  return users;
+};
+
 export const addUser = () => {
   addDoc(colRef, {
     name: "ნინი",
@@ -54,8 +78,8 @@ export const addUser = () => {
   });
 };
 
-export const deleteUser = () => {
-  const docRef = doc(db, "Users", "Nc2sdMuLxBWGM9KeTELe");
+export const deleteUser = (userId: string) => {
+  const docRef = doc(db, "Users", userId);
   deleteDoc(docRef).then((response) => {
     console.log(response);
   });
@@ -94,4 +118,32 @@ export const createUser = async (
       console.log(err.message);
     });
   return { errorStatus, userResponse, errorMessage };
+};
+
+export const signOutUser = () => {
+  signOut(auth)
+    .then(() => {
+      console.log("User signed out");
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
+};
+
+export const signInUser = async (email: string, password: string) => {
+  let logInStatus;
+  let errorMessage;
+  let userData;
+  await signInWithEmailAndPassword(auth, email, password)
+    .then((cred) => {
+      console.log("user logged in :", cred.user);
+      userData = cred.user;
+      logInStatus = true;
+    })
+    .catch((err) => {
+      console.log(err.message);
+      errorMessage = err.message;
+      logInStatus = false;
+    });
+  return { logInStatus, errorMessage, userData };
 };

@@ -12,13 +12,19 @@
   "dependencies": {
     "bootstrap": "^5.3.0",
     "firebase": "^9.22.2",
+    "js-cookie": "^3.0.5",
     "react": "^18.2.0",
+    "react-cookie": "^4.1.1",
     "react-dom": "^18.2.0",
     "react-feather": "^2.0.10",
     "react-hook-form": "^7.44.3",
+    "react-icons": "^4.9.0",
+    "react-router": "^6.13.0",
+    "react-router-dom": "^6.13.0",
     "reactstrap": "^9.2.0"
   },
   "devDependencies": {
+    "@types/js-cookie": "^3.0.3",
     "@types/react": "^18.0.37",
     "@types/react-dom": "^18.0.11",
     "@typescript-eslint/eslint-plugin": "^5.59.0",
