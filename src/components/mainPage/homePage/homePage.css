@@ -1,0 +1,45 @@
+.header-container{
+    background-color: #242526;
+    border-bottom: 1px solid #b0b3b8;
+    padding: 20px 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.circle-styles{
+    background-color: #65676b;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.circle-styles-active{
+    background-color: #4169e1;
+}
+.margin-style-for-header-elements{
+     margin-top: -20px;
+}
+.facebook-search-styles{
+    padding-left: 10px;
+    background-color: #65676b;
+    color: white;
+}
+.home-page-container-styles{
+    background-color: #1c1e21;
+}
+.bar-pictures-container{
+    height: 50px;
+    border-bottom: 3px solid #385898;
+    width: 60px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+.active-bar-color{
+    border-bottom: 3px solid #385898;
+}
+.inActive-bar-color{
+    border-bottom: 3px solid #242526;
+}

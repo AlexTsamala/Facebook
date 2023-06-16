@@ -20,17 +20,20 @@ const LoginPage = () => {
     formState: { errors },
   } = useForm<LogInDto>();
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<LogInDto> = async (data) => {
+    setLoading(true);
     const response = await signInUser(data.user, data.password);
     const { logInStatus, errorMessage } = response;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const userData: any = response.userData;
     if (logInStatus) {
-      navigate("/home/ალექსანდრეწამალაშვილი");
       Cookies.set("userToken", userData?.accessToken);
       const response = await oneUser(userData?.email);
       Cookies.set("userToken", JSON.stringify(response));
+      navigate(`/home/${response[0].name}` + response[0].surname);
     } else {
       if (errorMessage === "Firebase: Error (auth/invalid-email).") {
         setErrorMessage("Invalid email");
@@ -40,6 +43,7 @@ const LoginPage = () => {
         setErrorMessage("Wrong password");
       }
     }
+    setLoading(false);
   };
   const [createIsOpen, setCreateIsOpen] = useState<boolean>(false);
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
@@ -53,7 +57,7 @@ const LoginPage = () => {
       <form className="logIn-form" onSubmit={handleSubmit(onSubmit)}>
         <input
           className="logIn-input"
-          placeholder="Email address or phone number  "
+          placeholder="Email address or phone number"
           {...register("user")}
         />
         <div className="relative">
@@ -84,7 +88,18 @@ const LoginPage = () => {
           <span className="error-message-style">{errorMessage}</span>
         )}
 
-        <input className="submit-button" type="submit" value="Log in" />
+        <button
+          className={`submit-button flex justify-center  ${loading && "py-2"}`}
+          type="submit"
+        >
+          {loading ? (
+            <div className="spinner-border text-light" role="status">
+              <span className="sr-only">Loading...</span>
+            </div>
+          ) : (
+            "Log in"
+          )}
+        </button>
         <a className="forgot-password-link" href="">
           Forgotten password ?
         </a>
