@@ -10,13 +10,17 @@ const MainPage = () => {
   return (
     <div className="min-h-screen home-page-container-styles">
       <Header setTopBar={setTopBar} topBar={topBar} />
-      {topBar === "home" ? (
-        <Homepage />
-      ) : topBar === "video" ? (
-        <VideoPage />
-      ) : (
-        <GroupPage />
-      )}
+      <div className=" flex justify-center">
+        <div className=" w-pagesWidth mt-10 flex content-center">
+          {topBar === "home" ? (
+            <Homepage />
+          ) : topBar === "video" ? (
+            <VideoPage />
+          ) : (
+            <GroupPage />
+          )}
+        </div>
+      </div>
     </div>
   );
 };

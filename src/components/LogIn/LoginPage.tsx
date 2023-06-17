@@ -32,7 +32,7 @@ const LoginPage = () => {
     if (logInStatus) {
       Cookies.set("userToken", userData?.accessToken);
       const response = await oneUser(userData?.email);
-      Cookies.set("userToken", JSON.stringify(response));
+      Cookies.set("userData", JSON.stringify(response));
       navigate(`/home/${response[0].name}` + response[0].surname);
     } else {
       if (errorMessage === "Firebase: Error (auth/invalid-email).") {

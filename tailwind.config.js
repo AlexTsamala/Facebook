@@ -9,6 +9,11 @@ module.exports = {
       },
       backgroundColor: {
         signUpColor: "#00a400",
+        postContainer: "#303030",
+      },
+      width: {
+        pagesWidth: "500px",
+        postInputWidth: "420px",
       },
     },
   },

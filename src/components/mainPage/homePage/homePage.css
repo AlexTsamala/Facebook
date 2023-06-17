@@ -43,3 +43,15 @@
 .inActive-bar-color{
     border-bottom: 3px solid #242526;
 }
+.post-button-text-style{
+    color:#b0b3b8;
+}
+.post-buttons-style{
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    padding: 5px 12px;
+}
+.post-buttons-style:hover{
+    background-color:#65676b;
+}
