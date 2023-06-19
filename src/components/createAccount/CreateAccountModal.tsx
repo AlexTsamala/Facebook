@@ -46,7 +46,7 @@ const CreateAccountModal: FC<Props> = ({ onCancel, isOpen }) => {
   return (
     <Modal isOpen={isOpen} toggle={onCancel}>
       <ModalHeader toggle={onCancel}>
-        Sign Up{" "}
+        Sign Up
         <span className=" text-red-600 ml-28 font-KumbhSans font-bold">
           {errorMessage}
         </span>

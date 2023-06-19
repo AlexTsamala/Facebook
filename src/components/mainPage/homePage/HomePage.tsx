@@ -17,9 +17,11 @@ import { PostDto } from "../../../dto/PostsDto";
 import { updatePost } from "../../../../fireBaseConfig";
 import { collection, onSnapshot, getFirestore } from "firebase/firestore";
 import { useState } from "react";
+import CreatePostModal from "./CreatePostModal";
 
 const Homepage = () => {
   const [clickOnLike, setClickOnLike] = useState<string>("#B0B3B8");
+  const [createIsOpen, setCreateIsOpen] = useState<boolean>(false);
   const [posts, setPosts] = useState<PostDto[]>();
   const userName = JSON.parse(Cookies.get("userData") || "")[0].name;
 
@@ -60,6 +62,7 @@ const Homepage = () => {
             className="rounded-3xl facebook-search-styles w-postInputWidth p-2.5"
             type="text"
             placeholder={`What's on your mind ${userName} ?`}
+            onClick={() => setCreateIsOpen(true)}
           />
         </div>
         <hr className="border text-white w-full mt-3" />
@@ -143,6 +146,10 @@ const Homepage = () => {
           </div>
         );
       })}
+      <CreatePostModal
+        isOpen={createIsOpen}
+        onCancel={() => setCreateIsOpen(false)}
+      />
     </div>
   );
 };
