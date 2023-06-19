@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { initializeApp } from "firebase/app";
 import {
   getFirestore,
@@ -8,6 +9,7 @@ import {
   doc,
   query,
   where,
+  updateDoc,
 } from "firebase/firestore";
 import { UserDto } from "./src/dto/UsersDto";
 import {
@@ -17,7 +19,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: "AIzaSyD8vnnCw4qF-_3X7mwkcFl5remrbfzffco",
   authDomain: "facebook-b3e85.firebaseapp.com",
   projectId: "facebook-b3e85",
@@ -36,6 +38,7 @@ const db = getFirestore();
 const auth = getAuth();
 
 const colRef = collection(db, "Users");
+const colRefPosts = collection(db, "Posts");
 
 export const users = await getDocs(colRef)
   .then((snapShot) => {
@@ -46,6 +49,20 @@ export const users = await getDocs(colRef)
       users.push(user);
     });
     return users;
+  })
+  .catch((err) => {
+    console.log(err.message);
+  });
+
+export const posts = await getDocs(colRefPosts)
+  .then((snapShot) => {
+    const posts: any = [];
+    snapShot.docs.forEach((doc) => {
+      const postData = doc.data() as any;
+      const post = { id: doc.id, ...postData };
+      posts.push(post);
+    });
+    return posts;
   })
   .catch((err) => {
     console.log(err.message);
@@ -81,6 +98,15 @@ export const addUser = () => {
 export const deleteUser = (userId: string) => {
   const docRef = doc(db, "Users", userId);
   deleteDoc(docRef).then((response) => {
+    console.log(response);
+  });
+};
+
+export const updatePost = (postId: string, numberOfLikes: number) => {
+  const docRef = doc(db, "Posts", postId);
+  updateDoc(docRef, {
+    reactions: numberOfLikes,
+  }).then((response) => {
     console.log(response);
   });
 };

@@ -5,6 +5,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    position: fixed;
+    width: 100%;
 }
 .circle-styles{
     background-color: #65676b;
@@ -27,7 +29,10 @@
     color: white;
 }
 .home-page-container-styles{
-    background-color: #1c1e21;
+    background-color: #1c1e21;   
+}
+.pages-margin{
+    margin-top: 6%;
 }
 .bar-pictures-container{
     height: 50px;
@@ -54,4 +59,26 @@
 }
 .post-buttons-style:hover{
     background-color:#65676b;
+}
+.post-author-style{
+    font-weight: 600;
+    color:#E4E6EB;
+}
+.post-time-style{
+    color:#B0B3B8;
+    font-size: 12px;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    margin-top:3px;
+}
+.post-description-style{
+    color:#E4E6EB;
+    font-size:15px;
+    line-height: 1.3333;
+    font-weight: 400;
+}
+.engagement-section{
+    border-top:1px solid #B0B3B8;
+    padding: 5px 10px;  
 }
