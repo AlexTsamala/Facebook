@@ -34,9 +34,9 @@ const Homepage = () => {
 
   const db = getFirestore();
   const colRefPosts = collection(db, "Posts");
-  const q = query(colRefPosts, orderBy("createdAt"));
+  // const q = query(colRefPosts, orderBy("createdAt"));
 
-  onSnapshot(q, (snapShot) => {
+  onSnapshot(colRefPosts, (snapShot) => {
     const postsArr: PostDto[] = [];
     snapShot.docs.forEach((doc) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -1,0 +1,17 @@
+.account-container{
+    background-color: #242526;
+    top: 75px;
+    box-shadow: 0px 0px 18px #242526;
+    right: 20px;
+}
+.account-user-section{
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    padding: 5px 12px;
+    color:#ffffff;
+}
+.account-user-section:hover{
+    background-color:#65676b;
+    transition: 0.5s;
+}

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Header from "./homePage/Header";
+import Header from "./homePage/Header/Header";
 import Homepage from "./homePage/HomePage";
 import "./homePage/homePage.css";
 import VideoPage from "./videoPage/VideoPage";
