@@ -15,20 +15,28 @@ import LikeImg from "../../../assets/like.png";
 import Cookies from "js-cookie";
 import { PostDto } from "../../../dto/PostsDto";
 import { updatePost } from "../../../../fireBaseConfig";
-import { collection, onSnapshot, getFirestore } from "firebase/firestore";
+import {
+  collection,
+  onSnapshot,
+  getFirestore,
+  query,
+  orderBy,
+} from "firebase/firestore";
 import { useState } from "react";
 import CreatePostModal from "./CreatePostModal";
 
 const Homepage = () => {
   const [clickOnLike, setClickOnLike] = useState<string>("#B0B3B8");
   const [createIsOpen, setCreateIsOpen] = useState<boolean>(false);
+  const [inputValue, setInputValue] = useState("");
   const [posts, setPosts] = useState<PostDto[]>();
   const userName = JSON.parse(Cookies.get("userData") || "")[0].name;
 
   const db = getFirestore();
   const colRefPosts = collection(db, "Posts");
+  const q = query(colRefPosts, orderBy("createdAt"));
 
-  onSnapshot(colRefPosts, (snapShot) => {
+  onSnapshot(q, (snapShot) => {
     const postsArr: PostDto[] = [];
     snapShot.docs.forEach((doc) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -59,10 +67,12 @@ const Homepage = () => {
             src={profileImg}
           />
           <input
-            className="rounded-3xl facebook-search-styles w-postInputWidth p-2.5"
+            className="rounded-3xl facebook-search-styles w-postInputWidth p-2.5 outline-none"
             type="text"
             placeholder={`What's on your mind ${userName} ?`}
             onClick={() => setCreateIsOpen(true)}
+            value={inputValue}
+            readOnly
           />
         </div>
         <hr className="border text-white w-full mt-3" />
@@ -99,7 +109,7 @@ const Homepage = () => {
               <div>
                 <h3 className="post-author-style">{post.name}</h3>
                 <span className="post-time-style">
-                  1h{" "}
+                  1h
                   <img
                     title="Public"
                     className=" w-3 h-3"
@@ -149,6 +159,8 @@ const Homepage = () => {
       <CreatePostModal
         isOpen={createIsOpen}
         onCancel={() => setCreateIsOpen(false)}
+        inputValue={inputValue}
+        setInputValue={setInputValue}
       />
     </div>
   );

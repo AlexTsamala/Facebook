@@ -10,6 +10,7 @@ import {
   query,
   where,
   updateDoc,
+  serverTimestamp,
 } from "firebase/firestore";
 import { UserDto } from "./src/dto/UsersDto";
 import {
@@ -93,6 +94,30 @@ export const addUser = () => {
   }).then((response) => {
     console.log(response);
   });
+};
+
+export const addPost = (
+  ownerName: string,
+  url: any,
+  description: string,
+  id: string,
+  postAuthorImg: any
+) => {
+  addDoc(colRefPosts, {
+    name: ownerName,
+    postPhoto: url,
+    title: description,
+    userId: id,
+    url: postAuthorImg,
+    createdAt: serverTimestamp(),
+    reactions: 0,
+  })
+    .then((response) => {
+      console.log(response);
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
 };
 
 export const deleteUser = (userId: string) => {
