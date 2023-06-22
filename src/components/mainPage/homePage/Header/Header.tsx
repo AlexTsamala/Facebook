@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 import { Home, Tv, Users, Bell, MessageCircle } from "react-feather";
 import facebookImg from "../../../../assets/facebook.png";
-import profileImg from "../../../../assets/სანდროწამალაშვილი.jpg";
+import Cookies from "js-cookie";
 import Account from "./Account";
 
 interface props {
@@ -12,6 +12,10 @@ interface props {
 const Header: FC<props> = ({ setTopBar, topBar }) => {
   const [messNotButtons, setMessNotButtons] = useState("");
   const [accountOpen, setAccountOpen] = useState(false);
+
+  const profilePhoto = JSON.parse(Cookies.get("userData") || "")[0]
+    .profilePhoto;
+
   const barHandler = (name: string) => {
     setTopBar(name);
   };
@@ -89,7 +93,7 @@ const Header: FC<props> = ({ setTopBar, topBar }) => {
           title="Account"
           className="circle-styles cursor-pointer"
           alt="current-user-img"
-          src={profileImg}
+          src={profilePhoto}
         />
         {accountOpen ? <Account /> : null}
       </div>

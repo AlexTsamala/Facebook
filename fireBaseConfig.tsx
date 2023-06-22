@@ -130,6 +130,13 @@ export const deleteUser = (userId: string) => {
   });
 };
 
+export const deletePost = (postId: string) => {
+  const docRef = doc(db, "Posts", postId);
+  deleteDoc(docRef).then((response) => {
+    console.log(response);
+  });
+};
+
 export const updatePost = (postId: string, numberOfLikes: number) => {
   const docRef = doc(db, "Posts", postId);
   updateDoc(docRef, {

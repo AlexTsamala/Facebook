@@ -6,8 +6,8 @@ import {
   ThumbsUp,
   MessageSquare,
   CornerUpRight,
+  MoreHorizontal,
 } from "react-feather";
-import profileImg from "../../../assets/სანდროწამალაშვილი.jpg";
 import earthImg from "../../../assets/worldwide.png";
 import LikeImg from "../../../assets/like.png";
 import Cookies from "js-cookie";
@@ -23,13 +23,18 @@ import {
 import { useState } from "react";
 import CreatePostModal from "./CreatePostModal";
 import getTimeAgo from "../../../helper/timeConverter";
+import MoreButtonFunctional from "./MoreButtonSection";
 
 const Homepage = () => {
   const [clickOnLike, setClickOnLike] = useState<string>("#B0B3B8");
   const [createIsOpen, setCreateIsOpen] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState("");
+  const [clickedPostId, setClickedPostId] = useState<string>("");
   const [posts, setPosts] = useState<PostDto[]>();
   const userName = JSON.parse(Cookies.get("userData") || "")[0].name;
+  const userId = JSON.parse(Cookies.get("userData") || "")[0].id;
+  const profilePhoto = JSON.parse(Cookies.get("userData") || "")[0]
+    .profilePhoto;
 
   const db = getFirestore();
   const colRefPosts = collection(db, "Posts");
@@ -56,6 +61,14 @@ const Homepage = () => {
     }
   };
 
+  const moreButtonHandler = (postId: string) => {
+    if (postId === clickedPostId) {
+      setClickedPostId("");
+    } else {
+      setClickedPostId(postId);
+    }
+  };
+
   return (
     <div>
       <div className="flex justify-center items-start rounded-md bg-postContainer p-3 flex-col">
@@ -63,7 +76,7 @@ const Homepage = () => {
           <img
             className="circle-styles cursor-pointer"
             alt="current-user-img"
-            src={profileImg}
+            src={profilePhoto}
           />
           <input
             className="rounded-3xl facebook-search-styles w-postInputWidth p-2.5 outline-none"
@@ -98,25 +111,43 @@ const Homepage = () => {
       </div>
       {posts?.map((post: PostDto) => {
         return (
-          <div key={post.id} className="bg-postContainer mt-3 rounded-md">
-            <div className="flex gap-2 p-2.5">
-              <img
-                className="circle-styles cursor-pointer"
-                alt="postAuthorPhoto"
-                src={post.url}
-              />
-              <div>
-                <h3 className="post-author-style">{post.name}</h3>
-                <span className="post-time-style">
-                  {getTimeAgo(post.createdAt)}
-                  <img
-                    title="Public"
-                    className=" w-3 h-3"
-                    alt="earth"
-                    src={earthImg}
-                  />
-                </span>
+          <div
+            key={post.id}
+            className="bg-postContainer mt-3 rounded-md relative"
+          >
+            <div className="flex justify-between items-center">
+              <div className="flex gap-2 p-2.5">
+                <img
+                  className="circle-styles cursor-pointer"
+                  alt="postAuthorPhoto"
+                  src={post.url}
+                />
+                <div>
+                  <h3 className="post-author-style">{post.name}</h3>
+                  <span className="post-time-style">
+                    {getTimeAgo(post.createdAt)}
+                    <img
+                      title="Public"
+                      className=" w-3 h-3"
+                      alt="earth"
+                      src={earthImg}
+                    />
+                  </span>
+                </div>
               </div>
+
+              {userId === post.userId ? (
+                <div
+                  onClick={() => moreButtonHandler(post.id)}
+                  className="post-more-button mr-3"
+                >
+                  <MoreHorizontal className=" cursor-pointer" color="#b0b3b8" />
+                </div>
+              ) : null}
+
+              {clickedPostId === post.id ? (
+                <MoreButtonFunctional postId={post.id} />
+              ) : null}
             </div>
             <p className="post-description-style p-2.5">{post.title}</p>
             {post.postPhoto.length > 0 ? (
