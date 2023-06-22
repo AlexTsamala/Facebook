@@ -15,7 +15,16 @@ import profileImg from "../../../assets/სანდროწამალაშ�
 import earthImg from "../../../assets/worldwide.png";
 import Cookies from "js-cookie";
 import EmojiPicker, { EmojiStyle, Theme } from "emoji-picker-react";
-import { addPost } from "../../../../fireBaseConfig";
+import { db, storage, addPost } from "../../../../fireBaseConfig";
+import {
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+  UploadTask,
+  StorageReference,
+} from "firebase/storage";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { toast } from "react-toastify";
 
 interface Props {
   onCancel: () => void;
@@ -32,7 +41,9 @@ const CreatePostModal: FC<Props> = ({
 }) => {
   const [disableStatus, setDisableStatus] = useState<boolean>(true);
   const [emojiPicker, setEmojiPicker] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
+  const [imageUrl, setImageUrl] = useState<string>("");
   const [file, setFile] = useState<any>();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const userName = JSON.parse(Cookies.get("userData") || "")[0].name;
@@ -82,21 +93,77 @@ const CreatePostModal: FC<Props> = ({
   };
   const handleFileSelect = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    console.log(file);
     if (file) {
       setFile(file);
+      setImageUrl(URL.createObjectURL(file));
     }
   };
 
   const handleCreatePost = () => {
+    setLoading(true);
     const authorName = userName + " " + surName;
-    addPost(authorName, file, inputValue, userId, profilePhoto);
+    if (file) {
+      const storageRef: StorageReference = ref(
+        storage,
+        `/images/${Date.now()}${file?.name}`
+      );
+
+      const uploadImage: UploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadImage.on(
+        "state_changed",
+        () => {
+          // const progressPercent = Math.round(
+          //   (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          // );
+          // setProgressIndicator(progressPercent);
+        },
+        (err) => {
+          console.log(err);
+        },
+        () => {
+          getDownloadURL(uploadImage.snapshot.ref).then((url) => {
+            const articleRef = collection(db, "Posts");
+            const newArticle = {
+              name: authorName,
+              postPhoto: url,
+              title: inputValue,
+              userId: userId,
+              url: profilePhoto,
+              createdAt: serverTimestamp(),
+              reactions: 0,
+            };
+            addDoc(articleRef, newArticle)
+              .then(() => {
+                setFile("");
+                setInputValue("");
+                setLoading(false);
+                onCancel();
+              })
+              .catch((err) => {
+                toast("Error adding article", { type: err.message });
+              });
+          });
+        }
+      );
+    } else {
+      addPost(authorName, "", inputValue, userId, profilePhoto);
+      setInputValue("");
+      setLoading(false);
+      onCancel();
+    }
+  };
+
+  const onModalClose = () => {
+    setUploadProgress(0);
+    setImageUrl("");
+    onCancel();
   };
 
   return (
     <Modal isOpen={isOpen} toggle={onCancel}>
       <ModalHeader
-        onClick={() => setUploadProgress(0)}
+        onClick={onModalClose}
         className="post-modal-header"
         toggle={onCancel}
       >
@@ -153,6 +220,14 @@ const CreatePostModal: FC<Props> = ({
             <CheckCircle /> File uploaded successfully!
           </div>
         )}
+        {imageUrl ? (
+          <img
+            className="post-image-preview"
+            src={imageUrl}
+            alt="Image Preview"
+          />
+        ) : null}
+
         <div className="text-white rounded-xl font-semibold p-3 add-photo-container flex justify-between">
           <h3>Add to your post</h3>
           <div className="flex gap-2">
@@ -197,7 +272,13 @@ const CreatePostModal: FC<Props> = ({
           type="button"
           onClick={handleCreatePost}
         >
-          Post
+          {loading ? (
+            <div className="spinner-border text-light" role="status">
+              <span className="sr-only">Loading...</span>
+            </div>
+          ) : (
+            "Post"
+          )}
         </button>
       </ModalFooter>
     </Modal>

@@ -8,8 +8,6 @@ import {
   CornerUpRight,
 } from "react-feather";
 import profileImg from "../../../assets/სანდროწამალაშვილი.jpg";
-import radioFreedomPhoto from "../../../assets/radioFreedom.png";
-import SeanPennImg from "../../../assets/SeanPenn.jpg";
 import earthImg from "../../../assets/worldwide.png";
 import LikeImg from "../../../assets/like.png";
 import Cookies from "js-cookie";
@@ -24,6 +22,7 @@ import {
 } from "firebase/firestore";
 import { useState } from "react";
 import CreatePostModal from "./CreatePostModal";
+import getTimeAgo from "../../../helper/timeConverter";
 
 const Homepage = () => {
   const [clickOnLike, setClickOnLike] = useState<string>("#B0B3B8");
@@ -34,9 +33,9 @@ const Homepage = () => {
 
   const db = getFirestore();
   const colRefPosts = collection(db, "Posts");
-  // const q = query(colRefPosts, orderBy("createdAt"));
+  const q = query(colRefPosts, orderBy("createdAt", "desc"));
 
-  onSnapshot(colRefPosts, (snapShot) => {
+  onSnapshot(q, (snapShot) => {
     const postsArr: PostDto[] = [];
     snapShot.docs.forEach((doc) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -104,12 +103,12 @@ const Homepage = () => {
               <img
                 className="circle-styles cursor-pointer"
                 alt="postAuthorPhoto"
-                src={radioFreedomPhoto}
+                src={post.url}
               />
               <div>
                 <h3 className="post-author-style">{post.name}</h3>
                 <span className="post-time-style">
-                  1h
+                  {getTimeAgo(post.createdAt)}
                   <img
                     title="Public"
                     className=" w-3 h-3"
@@ -120,7 +119,9 @@ const Homepage = () => {
               </div>
             </div>
             <p className="post-description-style p-2.5">{post.title}</p>
-            <img alt="postPhoto" src={SeanPennImg} />
+            {post.postPhoto.length > 0 ? (
+              <img alt="postPhoto" src={post.postPhoto} />
+            ) : null}
             <div className="flex gap-1 p-2.5">
               <img className="w-5 h-5" alt="like" src={LikeImg} />
               <span className="post-button-text-style text-sm">

@@ -19,6 +19,7 @@ import {
   signOut,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+import { getStorage } from "firebase/storage";
 
 export const firebaseConfig = {
   apiKey: "AIzaSyD8vnnCw4qF-_3X7mwkcFl5remrbfzffco",
@@ -33,10 +34,12 @@ interface dtoId {
   id: string;
 }
 
-initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 
-const db = getFirestore();
-const auth = getAuth();
+export const db = getFirestore();
+export const auth = getAuth();
+
+export const storage = getStorage(app);
 
 const colRef = collection(db, "Users");
 const colRefPosts = collection(db, "Posts");

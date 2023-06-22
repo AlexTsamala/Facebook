@@ -1,3 +1,8 @@
+interface createdAtObj {
+  seconds: number;
+  nanoseconds: number;
+}
+
 export interface PostDto {
   name: string;
   postPhoto: string;
@@ -6,4 +11,5 @@ export interface PostDto {
   url: string;
   userId: string;
   id: string;
+  createdAt: createdAtObj;
 }
