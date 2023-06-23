@@ -1,0 +1,11 @@
+.sidebar-user-section{
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    padding: 5px 12px;
+    color:#ffffff;
+}
+.sidebar-user-section:hover{
+    background-color:#65676b;
+    transition: 0.5s;
+}

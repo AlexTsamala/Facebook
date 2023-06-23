@@ -15,3 +15,9 @@
     background-color:#65676b;
     transition: 0.5s;
 }
+.facebook-background-styles{
+    position: absolute;
+    top: 18px;
+    border-radius: 26px;
+    left: 24px;
+}

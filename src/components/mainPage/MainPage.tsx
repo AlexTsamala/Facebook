@@ -8,18 +8,16 @@ import GroupPage from "./groupsPage/GroupsPage";
 const MainPage = () => {
   const [topBar, setTopBar] = useState("home");
   return (
-    <div className="min-h-screen home-page-container-styles">
+    <div className="min-h-screen home-page-container-styles relative">
       <Header setTopBar={setTopBar} topBar={topBar} />
-      <div className=" flex justify-center">
-        <div className=" w-pagesWidth pages-margin flex content-center">
-          {topBar === "home" ? (
-            <Homepage />
-          ) : topBar === "video" ? (
-            <VideoPage />
-          ) : (
-            <GroupPage />
-          )}
-        </div>
+      <div className=" px-2">
+        {topBar === "home" ? (
+          <Homepage />
+        ) : topBar === "video" ? (
+          <VideoPage />
+        ) : (
+          <GroupPage />
+        )}
       </div>
     </div>
   );

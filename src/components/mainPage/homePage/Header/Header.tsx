@@ -1,8 +1,8 @@
 import { FC, useState } from "react";
-import { Home, Tv, Users, Bell, MessageCircle } from "react-feather";
-import facebookImg from "../../../../assets/facebook.png";
+import { Home, Tv, Users, Bell } from "react-feather";
 import Cookies from "js-cookie";
 import Account from "./Account";
+import { FaFacebookMessenger, FaFacebook } from "react-icons/fa";
 
 interface props {
   setTopBar: (name: string) => void;
@@ -23,10 +23,10 @@ const Header: FC<props> = ({ setTopBar, topBar }) => {
   return (
     <div className="header-container">
       <div className="flex gap-3 margin-style-for-header-elements">
-        <img
-          className="w-10 cursor-pointer"
-          alt="facebook-logo"
-          src={facebookImg}
+        <div className="bg-white w-8 h-9 facebook-background-styles"></div>
+        <FaFacebook
+          className="w-10 cursor-pointer h-10 z-10"
+          color={"#1E90FF"}
         />
         <input
           className="rounded-3xl facebook-search-styles"
@@ -74,21 +74,31 @@ const Header: FC<props> = ({ setTopBar, topBar }) => {
           className={`circle-styles cursor-pointer ${
             messNotButtons === "messageBar" ? "circle-styles-active" : ""
           } `}
-          onClick={() => setMessNotButtons("messageBar")}
+          onClick={() => {
+            setMessNotButtons("messageBar");
+            setAccountOpen(false);
+          }}
         >
-          <MessageCircle color={"#ffffff"} />
+          <FaFacebookMessenger
+            color={"#ffffff"}
+            style={{ width: "22px", height: "22px" }}
+          />
         </div>
         <div
           className={`circle-styles cursor-pointer ${
             messNotButtons === "notificationBar" ? "circle-styles-active" : ""
           } `}
-          onClick={() => setMessNotButtons("notificationBar")}
+          onClick={() => {
+            setMessNotButtons("notificationBar");
+            setAccountOpen(false);
+          }}
         >
           <Bell color={"#ffffff"} />
         </div>
         <img
           onClick={() => {
             setAccountOpen(!accountOpen);
+            setMessNotButtons("");
           }}
           title="Account"
           className="circle-styles cursor-pointer"

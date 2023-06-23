@@ -29,7 +29,7 @@ const Account = () => {
           title="Account"
           className="circle-styles cursor-pointer"
           alt="current-user-img"
-          src={profileImg}
+          src={userData.profilePhoto}
         />
         <h3>{userData.name + " " + userData.surname}</h3>
       </div>
