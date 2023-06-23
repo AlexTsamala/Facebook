@@ -139,9 +139,11 @@ const CreatePostModal: FC<Props> = ({
                 setInputValue("");
                 setLoading(false);
                 onCancel();
+                setImageUrl("");
+                toast("Post successfully added", { type: "success" });
               })
-              .catch((err) => {
-                toast("Error adding article", { type: err.message });
+              .catch(() => {
+                toast("Error adding article", { type: "error" });
               });
           });
         }
@@ -150,6 +152,7 @@ const CreatePostModal: FC<Props> = ({
       addPost(authorName, "", inputValue, userId, profilePhoto);
       setInputValue("");
       setLoading(false);
+      toast("successfully added", { type: "success" });
       onCancel();
     }
   };

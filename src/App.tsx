@@ -1,6 +1,7 @@
 import LoginPage from "./components/LogIn/LoginPage";
 import { Navigate, Route, Routes } from "react-router";
 import MainPage from "./components/mainPage/MainPage";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
