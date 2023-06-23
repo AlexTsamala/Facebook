@@ -1,15 +1,25 @@
-import { FC, useState } from "react";
-import { Home, Tv, Users, Bell } from "react-feather";
+import { FC, useState, RefObject } from "react";
+import { Home, Tv, Users, Bell, ArrowLeft } from "react-feather";
 import Cookies from "js-cookie";
 import Account from "./Account";
 import { FaFacebookMessenger, FaFacebook } from "react-icons/fa";
+import SearchInputResult from "./searchInputFolder/SearchInputResult";
 
 interface props {
   setTopBar: (name: string) => void;
   topBar: string;
+  searchInputOpen: boolean;
+  setSearchInputOpen: (status: boolean) => void;
+  clickedPlace: RefObject<HTMLInputElement>;
 }
 
-const Header: FC<props> = ({ setTopBar, topBar }) => {
+const Header: FC<props> = ({
+  setTopBar,
+  topBar,
+  searchInputOpen,
+  setSearchInputOpen,
+  clickedPlace,
+}) => {
   const [messNotButtons, setMessNotButtons] = useState("");
   const [accountOpen, setAccountOpen] = useState(false);
 
@@ -22,17 +32,34 @@ const Header: FC<props> = ({ setTopBar, topBar }) => {
 
   return (
     <div className="header-container">
-      <div className="flex gap-3 margin-style-for-header-elements">
-        <div className="bg-white w-8 h-9 facebook-background-styles"></div>
-        <FaFacebook
-          className="w-10 cursor-pointer h-10 z-10"
-          color={"#1E90FF"}
-        />
+      <div className="flex items-center gap-3 margin-style-for-header-elements">
+        {!searchInputOpen ? (
+          <>
+            <div className="bg-white w-8 h-9 facebook-background-styles"></div>
+            <FaFacebook
+              className="w-10 cursor-pointer h-10 z-10"
+              color={"#1E90FF"}
+            />
+          </>
+        ) : (
+          <div className="mr-4">
+            <ArrowLeft
+              onClick={() => setSearchInputOpen(false)}
+              color="#ffffff"
+              className="cursor-pointer "
+            />
+          </div>
+        )}
         <input
+          ref={clickedPlace}
+          onClick={() => {
+            setSearchInputOpen(true);
+          }}
           className="rounded-3xl facebook-search-styles"
           type="text"
           placeholder="Search Facebook"
         />
+        {searchInputOpen ? <SearchInputResult /> : null}
       </div>
       <div className="flex gap-20 justify-center items-center">
         <div
