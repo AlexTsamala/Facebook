@@ -1,9 +1,11 @@
-import { FC, useState, RefObject } from "react";
+import { FC, useState, RefObject, useEffect } from "react";
 import { Home, Tv, Users, Bell, ArrowLeft } from "react-feather";
 import Cookies from "js-cookie";
 import Account from "./Account";
 import { FaFacebookMessenger, FaFacebook } from "react-icons/fa";
 import SearchInputResult from "./searchInputFolder/SearchInputResult";
+import { PersonDto } from "../../../../dto/PersonDto";
+import { getAllUsers } from "../../../../../fireBaseConfig";
 
 interface props {
   setTopBar: (name: string) => void;
@@ -22,9 +24,27 @@ const Header: FC<props> = ({
 }) => {
   const [messNotButtons, setMessNotButtons] = useState("");
   const [accountOpen, setAccountOpen] = useState(false);
+  const [usersData, setUsersData] = useState<PersonDto[]>([]);
+  // const [searchInputValue, setSearchInputValue] = useState<string>("");
 
   const profilePhoto = JSON.parse(Cookies.get("userData") || "")[0]
     .profilePhoto;
+  const currentUserId = JSON.parse(Cookies.get("userData") || "")[0].userId;
+
+  const InputValueHandler = (value: string) => {
+    // setSearchInputValue(value);
+    const data = getAllUsers.filter(
+      (user: PersonDto) => user.userId !== currentUserId
+    );
+    const filteredData = data.filter((user: PersonDto) =>
+      (user.name + " " + user.surname).includes(value)
+    );
+    if (value.length === 0) {
+      setUsersData([]);
+    } else {
+      setUsersData(filteredData);
+    }
+  };
 
   const barHandler = (name: string) => {
     setTopBar(name);
@@ -55,11 +75,13 @@ const Header: FC<props> = ({
           onClick={() => {
             setSearchInputOpen(true);
           }}
+          onChange={(event) => InputValueHandler(event?.target.value)}
+          // value={searchInputValue}
           className="rounded-3xl facebook-search-styles"
           type="text"
           placeholder="Search Facebook"
         />
-        {searchInputOpen ? <SearchInputResult /> : null}
+        {searchInputOpen ? <SearchInputResult usersData={usersData} /> : null}
       </div>
       <div className="flex gap-20 justify-center items-center">
         <div

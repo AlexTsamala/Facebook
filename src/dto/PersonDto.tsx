@@ -3,4 +3,6 @@ export interface PersonDto {
   name: string;
   surname: string;
   profilePhoto: string;
+  userId: string;
+  id: string;
 }

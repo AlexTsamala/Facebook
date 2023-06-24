@@ -72,8 +72,23 @@ export const posts = await getDocs(colRefPosts)
     console.log(err.message);
   });
 
-export const oneUser = async (email: string) => {
-  const q = query(colRef, where("email", "==", email));
+export const getAllUsers = await getDocs(colRef)
+  .then((snapShot) => {
+    const usersArr: any = [];
+    snapShot.docs.forEach((doc) => {
+      const usersData = doc.data() as any;
+      const users = { id: doc.id, ...usersData };
+      usersArr.push(users);
+    });
+
+    return usersArr;
+  })
+  .catch((err) => {
+    console.log(err.message);
+  });
+
+export const oneUser = async (id: string) => {
+  const q = query(colRef, where("userId", "==", id));
   const users: UserDto[] = [];
   await getDocs(q)
     .then((snapShot) => {
@@ -152,7 +167,7 @@ export const createUser = async (
   name: string,
   surname: string
 ) => {
-  let userResponse;
+  let userResponse: any;
   let errorStatus;
   let errorMessage;
   await createUserWithEmailAndPassword(auth, email, password)
@@ -171,6 +186,7 @@ export const createUser = async (
     name: name,
     surname: surname,
     email: email,
+    userId: userResponse.uid,
   })
     .then((response) => {
       console.log(response);

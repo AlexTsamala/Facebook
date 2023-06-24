@@ -2,6 +2,7 @@ import { FC, useState, useEffect } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { createUser } from "../../../fireBaseConfig";
+import { toast } from "react-toastify";
 
 interface Props {
   onCancel: () => void;
@@ -16,13 +17,12 @@ interface LogInDto {
 }
 
 const CreateAccountModal: FC<Props> = ({ onCancel, isOpen }) => {
-  const { register, handleSubmit } = useForm<LogInDto>();
+  const { register, handleSubmit, reset } = useForm<LogInDto>();
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   const onSubmit: SubmitHandler<LogInDto> = async (data) => {
     setLoading(true);
-    console.log(data);
     const response = await createUser(
       data.email,
       data.password,
@@ -31,6 +31,8 @@ const CreateAccountModal: FC<Props> = ({ onCancel, isOpen }) => {
     );
     if (!response.errorStatus) {
       onCancel();
+      reset();
+      toast("User successfully created", { type: "success" });
     } else {
       setErrorMessage("Email is already in use !");
     }
