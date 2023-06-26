@@ -11,13 +11,26 @@ import {
   faFlag,
 } from "@fortawesome/free-solid-svg-icons";
 import { FaFacebookMessenger } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { FC } from "react";
 
-const LeftSideBar = () => {
+interface props {
+  setTopBar: (barName: string) => void;
+}
+
+const LeftSideBar: FC<props> = ({ setTopBar }) => {
   const userData = JSON.parse(Cookies.get("userData") || "")[0];
+  const navigate = useNavigate();
 
   return (
     <div className="pages-margin flex flex-col gap-2">
-      <div className="flex gap-2 cursor-pointer sidebar-user-section">
+      <div
+        onClick={() => {
+          setTopBar("");
+          navigate("/profilePage/" + userData.name + userData.surname);
+        }}
+        className="flex gap-2 cursor-pointer sidebar-user-section"
+      >
         <img
           title="Account"
           className="circle-styles cursor-pointer"

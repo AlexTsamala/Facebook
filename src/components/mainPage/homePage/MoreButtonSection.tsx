@@ -36,7 +36,7 @@ const MoreButtonFunctional: FC<props> = ({ postId }) => {
         isOpen={createIsOpen}
         onCancel={() => setCreateIsOpen(false)}
         title="Delete permanently ?"
-        description="Your post will be deleted permanently and you can't restore it"
+        description="Your post will be deleted permanently and you can't restore it."
       />
     </div>
   );

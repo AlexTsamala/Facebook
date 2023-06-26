@@ -20,20 +20,25 @@ import {
   query,
   orderBy,
 } from "firebase/firestore";
-import { useState } from "react";
+import { FC, useState } from "react";
 import CreatePostModal from "./CreatePostModal";
 import getTimeAgo from "../../../helper/timeConverter";
 import MoreButtonFunctional from "./MoreButtonSection";
 import LeftSideBar from "./leftSideBar/LeftSideBar";
 import FriendsSection from "./friendsSectionFolder/FriendsSection";
+import { useNavigate } from "react-router-dom";
 
-const Homepage = () => {
+interface props {
+  setTopBar: (barName: string) => void;
+}
+
+const Homepage: FC<props> = ({ setTopBar }) => {
   const [clickOnLike, setClickOnLike] = useState<string>("#B0B3B8");
   const [createIsOpen, setCreateIsOpen] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState("");
   const [clickedPostId, setClickedPostId] = useState<string>("");
   const [posts, setPosts] = useState<PostDto[]>();
-  const userName = JSON.parse(Cookies.get("userData") || "")[0].name;
+  const userData = JSON.parse(Cookies.get("userData") || "")[0];
   const userId = JSON.parse(Cookies.get("userData") || "")[0].id;
   const profilePhoto = JSON.parse(Cookies.get("userData") || "")[0]
     .profilePhoto;
@@ -41,6 +46,8 @@ const Homepage = () => {
   const db = getFirestore();
   const colRefPosts = collection(db, "Posts");
   const q = query(colRefPosts, orderBy("createdAt", "desc"));
+
+  const navigate = useNavigate();
 
   onSnapshot(q, (snapShot) => {
     const postsArr: PostDto[] = [];
@@ -73,11 +80,15 @@ const Homepage = () => {
 
   return (
     <div className="flex justify-between">
-      <LeftSideBar />
+      <LeftSideBar setTopBar={setTopBar} />
       <div className="w-pagesWidth pages-margin">
         <div className="flex justify-center items-start rounded-md bg-postContainer p-3 flex-col">
           <div className="flex gap-2">
             <img
+              onClick={() => {
+                navigate("/profilePage/" + userData.name + userData.surname);
+                setTopBar("");
+              }}
               className="circle-styles cursor-pointer"
               alt="current-user-img"
               src={profilePhoto}
@@ -85,7 +96,7 @@ const Homepage = () => {
             <input
               className="rounded-3xl facebook-search-styles w-postInputWidth p-2.5 outline-none"
               type="text"
-              placeholder={`What's on your mind ${userName} ?`}
+              placeholder={`What's on your mind ${userData.name} ?`}
               onClick={() => setCreateIsOpen(true)}
               value={inputValue}
               readOnly

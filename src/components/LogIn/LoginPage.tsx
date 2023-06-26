@@ -5,7 +5,7 @@ import "./logIn.css";
 import CreateAccountModal from "../createAccount/CreateAccountModal";
 import { signInUser, oneUser } from "../../../fireBaseConfig";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { FC, useState } from "react";
 import Cookies from "js-cookie";
 
 interface LogInDto {
@@ -13,7 +13,11 @@ interface LogInDto {
   password: string;
 }
 
-const LoginPage = () => {
+interface props {
+  setIsUserLoggedIn: (status: boolean) => void;
+}
+
+const LoginPage: FC<props> = ({ setIsUserLoggedIn }) => {
   const {
     register,
     handleSubmit,
@@ -34,6 +38,7 @@ const LoginPage = () => {
       const response = await oneUser(userData?.uid);
       Cookies.set("userData", JSON.stringify(response));
       navigate(`/home/${response[0].name}` + response[0].surname);
+      setIsUserLoggedIn(true);
     } else {
       if (errorMessage === "Firebase: Error (auth/invalid-email).") {
         setErrorMessage("Invalid email");

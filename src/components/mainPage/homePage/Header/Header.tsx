@@ -6,6 +6,7 @@ import { FaFacebookMessenger, FaFacebook } from "react-icons/fa";
 import SearchInputResult from "./searchInputFolder/SearchInputResult";
 import { PersonDto } from "../../../../dto/PersonDto";
 import { getAllUsers } from "../../../../../fireBaseConfig";
+import { useNavigate } from "react-router-dom";
 
 interface props {
   setTopBar: (name: string) => void;
@@ -13,6 +14,7 @@ interface props {
   searchInputOpen: boolean;
   setSearchInputOpen: (status: boolean) => void;
   clickedPlace: RefObject<HTMLInputElement>;
+  setIsUserLoggedIn: (status: boolean) => void;
 }
 
 const Header: FC<props> = ({
@@ -21,15 +23,16 @@ const Header: FC<props> = ({
   searchInputOpen,
   setSearchInputOpen,
   clickedPlace,
+  setIsUserLoggedIn,
 }) => {
   const [messNotButtons, setMessNotButtons] = useState("");
   const [accountOpen, setAccountOpen] = useState(false);
   const [usersData, setUsersData] = useState<PersonDto[]>([]);
-
+  const navigate = useNavigate();
   const profilePhoto = JSON.parse(Cookies.get("userData") || "")[0]
     .profilePhoto;
   const currentUserId = JSON.parse(Cookies.get("userData") || "")[0].userId;
-
+  const currentUserInfo = JSON.parse(Cookies.get("userData") || "")[0];
   const InputValueHandler = (value: string) => {
     const data = getAllUsers.filter(
       (user: PersonDto) => user.userId !== currentUserId
@@ -55,6 +58,12 @@ const Header: FC<props> = ({
           <>
             <div className="bg-white w-8 h-9 facebook-background-styles"></div>
             <FaFacebook
+              onClick={() => {
+                navigate(
+                  "/home/" + currentUserInfo.name + currentUserInfo.surname
+                );
+                barHandler("home");
+              }}
               className="w-10 cursor-pointer h-10 z-10"
               color={"#1E90FF"}
             />
@@ -82,7 +91,10 @@ const Header: FC<props> = ({
       </div>
       <div className="flex gap-20 justify-center items-center">
         <div
-          onClick={() => barHandler("home")}
+          onClick={() => {
+            barHandler("home");
+            navigate(`/home/${currentUserInfo.name}` + currentUserInfo.surname);
+          }}
           className={`bar-pictures-container ${
             topBar === "home" ? "active-bar-color" : "inActive-bar-color"
           }`}
@@ -93,7 +105,10 @@ const Header: FC<props> = ({
           />
         </div>
         <div
-          onClick={() => barHandler("video")}
+          onClick={() => {
+            navigate("/watch");
+            barHandler("video");
+          }}
           className={`bar-pictures-container ${
             topBar === "video" ? "active-bar-color" : "inActive-bar-color"
           }`}
@@ -104,7 +119,10 @@ const Header: FC<props> = ({
           />
         </div>
         <div
-          onClick={() => barHandler("users")}
+          onClick={() => {
+            navigate("/groups");
+            barHandler("users");
+          }}
           className={`bar-pictures-container ${
             topBar === "users" ? "active-bar-color" : "inActive-bar-color"
           }`}
@@ -151,7 +169,13 @@ const Header: FC<props> = ({
           alt="current-user-img"
           src={profilePhoto}
         />
-        {accountOpen ? <Account /> : null}
+        {accountOpen ? (
+          <Account
+            closeAccount={() => setAccountOpen(false)}
+            setIsUserLoggedIn={setIsUserLoggedIn}
+            onNavigateToProfile={() => barHandler("")}
+          />
+        ) : null}
       </div>
     </div>
   );

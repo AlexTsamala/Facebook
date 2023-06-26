@@ -6,33 +6,55 @@ import {
   LogOut,
   ArrowRight,
 } from "react-feather";
-import profileImg from "../../../../assets/სანდროწამალაშვილი.jpg";
 import Cookies from "js-cookie";
 import "./account.css";
 import { signOutUser } from "../../../../../fireBaseConfig";
 import { useNavigate } from "react-router-dom";
+import { FC } from "react";
 
-const Account = () => {
-  const userData = JSON.parse(Cookies.get("userData") || "")[0];
+interface props {
+  setIsUserLoggedIn: (status: boolean) => void;
+  onNavigateToProfile: () => void;
+  closeAccount: () => void;
+}
+
+const Account: FC<props> = ({
+  setIsUserLoggedIn,
+  onNavigateToProfile,
+  closeAccount,
+}) => {
+  const userDataCookie = Cookies.get("userData");
+  const userData = userDataCookie ? JSON.parse(userDataCookie)[0] : null;
   const navigate = useNavigate();
+
   const signOutHandler = () => {
     navigate("/log-in");
     signOutUser();
     Cookies.remove("userData");
     Cookies.remove("userToken");
+    setIsUserLoggedIn(false);
   };
 
   return (
     <div className="account-container p-3 rounded-lg absolute">
-      <div className="flex gap-2 cursor-pointer account-user-section">
-        <img
-          title="Account"
-          className="circle-styles cursor-pointer"
-          alt="current-user-img"
-          src={userData.profilePhoto}
-        />
-        <h3>{userData.name + " " + userData.surname}</h3>
-      </div>
+      {userData && (
+        <div
+          onClick={() => {
+            navigate("/profilePage/" + userData.name + userData.surname);
+            onNavigateToProfile();
+            closeAccount();
+          }}
+          className="flex gap-2 cursor-pointer account-user-section"
+        >
+          <img
+            title="Account"
+            className="circle-styles cursor-pointer"
+            alt="current-user-img"
+            src={userData.profilePhoto}
+          />
+          <h3>{userData.name + " " + userData.surname}</h3>
+        </div>
+      )}
       <div className="flex justify-center w-full mt-3 flex-col gap-2">
         <div className="flex justify-between gap-2 cursor-pointer post-buttons-style">
           <div className="flex gap-2">
