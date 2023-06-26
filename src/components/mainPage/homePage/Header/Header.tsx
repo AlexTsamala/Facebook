@@ -1,4 +1,4 @@
-import { FC, useState, RefObject, useEffect } from "react";
+import { FC, useState, RefObject } from "react";
 import { Home, Tv, Users, Bell, ArrowLeft } from "react-feather";
 import Cookies from "js-cookie";
 import Account from "./Account";
@@ -25,14 +25,12 @@ const Header: FC<props> = ({
   const [messNotButtons, setMessNotButtons] = useState("");
   const [accountOpen, setAccountOpen] = useState(false);
   const [usersData, setUsersData] = useState<PersonDto[]>([]);
-  // const [searchInputValue, setSearchInputValue] = useState<string>("");
 
   const profilePhoto = JSON.parse(Cookies.get("userData") || "")[0]
     .profilePhoto;
   const currentUserId = JSON.parse(Cookies.get("userData") || "")[0].userId;
 
   const InputValueHandler = (value: string) => {
-    // setSearchInputValue(value);
     const data = getAllUsers.filter(
       (user: PersonDto) => user.userId !== currentUserId
     );
@@ -76,7 +74,6 @@ const Header: FC<props> = ({
             setSearchInputOpen(true);
           }}
           onChange={(event) => InputValueHandler(event?.target.value)}
-          // value={searchInputValue}
           className="rounded-3xl facebook-search-styles"
           type="text"
           placeholder="Search Facebook"
