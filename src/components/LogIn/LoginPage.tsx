@@ -58,7 +58,7 @@ const LoginPage: FC<props> = ({ setIsUserLoggedIn }) => {
   };
 
   return (
-    <div className="logIn-container">
+    <div className="logIn-container bg-white">
       <form className="logIn-form" onSubmit={handleSubmit(onSubmit)}>
         <input
           className="logIn-input"
