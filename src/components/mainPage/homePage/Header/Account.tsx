@@ -13,16 +13,11 @@ import { useNavigate } from "react-router-dom";
 import { FC } from "react";
 
 interface props {
-  setIsUserLoggedIn: (status: boolean) => void;
   onNavigateToProfile: () => void;
   closeAccount: () => void;
 }
 
-const Account: FC<props> = ({
-  setIsUserLoggedIn,
-  onNavigateToProfile,
-  closeAccount,
-}) => {
+const Account: FC<props> = ({ onNavigateToProfile, closeAccount }) => {
   const userDataCookie = Cookies.get("userData");
   const userData = userDataCookie ? JSON.parse(userDataCookie)[0] : null;
   const navigate = useNavigate();
@@ -32,7 +27,6 @@ const Account: FC<props> = ({
     signOutUser();
     Cookies.remove("userData");
     Cookies.remove("userToken");
-    setIsUserLoggedIn(false);
   };
 
   return (

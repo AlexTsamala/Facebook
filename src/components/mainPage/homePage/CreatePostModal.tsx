@@ -50,7 +50,7 @@ const CreatePostModal: FC<Props> = ({
   const surName = JSON.parse(Cookies.get("userData") || "")[0].surname;
   const profilePhoto = JSON.parse(Cookies.get("userData") || "")[0]
     .profilePhoto;
-  const userId = JSON.parse(Cookies.get("userData") || "")[0].id;
+  const userId = JSON.parse(Cookies.get("userData") || "")[0].userId;
 
   useEffect(() => {
     const reader = new FileReader();

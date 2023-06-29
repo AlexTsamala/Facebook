@@ -7,6 +7,7 @@ import SearchInputResult from "./searchInputFolder/SearchInputResult";
 import { PersonDto } from "../../../../dto/PersonDto";
 import { getAllUsers } from "../../../../../fireBaseConfig";
 import { useNavigate } from "react-router-dom";
+import blankPhoto from "../../../../assets/avatar-blank.png";
 
 interface props {
   setTopBar: (name: string) => void;
@@ -14,7 +15,6 @@ interface props {
   searchInputOpen: boolean;
   setSearchInputOpen: (status: boolean) => void;
   clickedPlace: RefObject<HTMLInputElement>;
-  setIsUserLoggedIn: (status: boolean) => void;
 }
 
 const Header: FC<props> = ({
@@ -23,7 +23,6 @@ const Header: FC<props> = ({
   searchInputOpen,
   setSearchInputOpen,
   clickedPlace,
-  setIsUserLoggedIn,
 }) => {
   const [messNotButtons, setMessNotButtons] = useState("");
   const [accountOpen, setAccountOpen] = useState(false);
@@ -171,12 +170,11 @@ const Header: FC<props> = ({
           title="Account"
           className="circle-styles cursor-pointer"
           alt="current-user-img"
-          src={profilePhoto}
+          src={profilePhoto ? profilePhoto : blankPhoto}
         />
         {accountOpen ? (
           <Account
             closeAccount={() => setAccountOpen(false)}
-            setIsUserLoggedIn={setIsUserLoggedIn}
             onNavigateToProfile={() => barHandler("")}
           />
         ) : null}

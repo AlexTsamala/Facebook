@@ -27,6 +27,7 @@ import MoreButtonFunctional from "./MoreButtonSection";
 import LeftSideBar from "./leftSideBar/LeftSideBar";
 import FriendsSection from "./friendsSectionFolder/FriendsSection";
 import { useNavigate } from "react-router-dom";
+import blankPhoto from "../../../assets/avatar-blank.png";
 
 interface props {
   setTopBar: (barName: string) => void;
@@ -39,9 +40,7 @@ const Homepage: FC<props> = ({ setTopBar }) => {
   const [clickedPostId, setClickedPostId] = useState<string>("");
   const [posts, setPosts] = useState<PostDto[]>();
   const userData = JSON.parse(Cookies.get("userData") || "")[0];
-  const userId = JSON.parse(Cookies.get("userData") || "")[0].id;
-  const profilePhoto = JSON.parse(Cookies.get("userData") || "")[0]
-    .profilePhoto;
+  const userId = JSON.parse(Cookies.get("userData") || "")[0].userId;
 
   const db = getFirestore();
   const colRefPosts = collection(db, "Posts");
@@ -91,7 +90,7 @@ const Homepage: FC<props> = ({ setTopBar }) => {
               }}
               className="circle-styles cursor-pointer"
               alt="current-user-img"
-              src={profilePhoto}
+              src={userData.profilePhoto ? userData.profilePhoto : blankPhoto}
             />
             <input
               className="rounded-3xl facebook-search-styles w-postInputWidth p-2.5 outline-none"

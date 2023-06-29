@@ -13,6 +13,7 @@ import {
 import { FaFacebookMessenger } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { FC } from "react";
+import blankPhoto from "../../../../assets/avatar-blank.png";
 
 interface props {
   setTopBar: (barName: string) => void;
@@ -35,7 +36,7 @@ const LeftSideBar: FC<props> = ({ setTopBar }) => {
           title="Account"
           className="circle-styles cursor-pointer"
           alt="current-user-img"
-          src={userData.profilePhoto}
+          src={userData.profilePhoto ? userData.profilePhoto : blankPhoto}
         />
         <h3>{userData.name + " " + userData.surname}</h3>
       </div>

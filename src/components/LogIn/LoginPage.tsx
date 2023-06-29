@@ -13,11 +13,7 @@ interface LogInDto {
   password: string;
 }
 
-interface props {
-  setIsUserLoggedIn: (status: boolean) => void;
-}
-
-const LoginPage: FC<props> = ({ setIsUserLoggedIn }) => {
+const LoginPage: FC = () => {
   const {
     register,
     handleSubmit,
@@ -38,7 +34,6 @@ const LoginPage: FC<props> = ({ setIsUserLoggedIn }) => {
       const response = await oneUser(userData?.uid);
       Cookies.set("userData", JSON.stringify(response));
       navigate(`/home/${response[0].name}` + response[0].surname);
-      setIsUserLoggedIn(true);
     } else {
       if (errorMessage === "Firebase: Error (auth/invalid-email).") {
         setErrorMessage("Invalid email");
