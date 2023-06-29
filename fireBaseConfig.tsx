@@ -13,6 +13,7 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import { UserDto } from "./src/dto/UsersDto";
+import { PersonDto } from "./src/dto/PersonDto";
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -89,12 +90,12 @@ export const getAllUsers = await getDocs(colRef)
 
 export const oneUser = async (id: string) => {
   const q = query(colRef, where("userId", "==", id));
-  const users: UserDto[] = [];
+  const users: PersonDto[] = [];
   await getDocs(q)
     .then((snapShot) => {
       snapShot.docs.forEach((doc) => {
-        const userData = doc.data() as UserDto;
-        const user: UserDto & dtoId = { id: doc.id, ...userData };
+        const userData = doc.data() as PersonDto;
+        const user: PersonDto & dtoId = { id: doc.id, ...userData };
         users.push(user);
       });
     })
@@ -187,6 +188,7 @@ export const createUser = async (
     surname: surname,
     email: email,
     userId: userResponse.uid,
+    coverPhoto: "",
   })
     .then((response) => {
       console.log(response);

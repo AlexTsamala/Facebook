@@ -1,12 +1,16 @@
 import "./searchInput.css";
 import { FC } from "react";
 import { PersonDto } from "../../../../../dto/PersonDto";
+import Cookies from "js-cookie";
 
 interface props {
   usersData: PersonDto[] | undefined;
 }
 
 const SearchInputResult: FC<props> = ({ usersData }) => {
+  const chosenUserHandler = (chosenUserId: string) => {
+    Cookies.set("chosenUserId", chosenUserId);
+  };
   return (
     <div
       className={`search-input-container ${
@@ -16,6 +20,7 @@ const SearchInputResult: FC<props> = ({ usersData }) => {
       {usersData?.map((person: PersonDto) => {
         return (
           <div
+            onClick={() => chosenUserHandler(person.userId)}
             key={person.name}
             className="flex gap-2 cursor-pointer post-buttons-style"
           >

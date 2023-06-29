@@ -4,5 +4,5 @@ export interface PersonDto {
   surname: string;
   profilePhoto: string;
   userId: string;
-  id: string;
+  coverPhoto: string;
 }

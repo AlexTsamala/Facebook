@@ -15,6 +15,9 @@ module.exports = {
         pagesWidth: "500px",
         postInputWidth: "420px",
       },
+      height: {
+        backgroundPhotoHeight: "500px",
+      },
     },
   },
   plugins: [],

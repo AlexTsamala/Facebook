@@ -63,6 +63,7 @@ const Header: FC<props> = ({
                   "/home/" + currentUserInfo.name + currentUserInfo.surname
                 );
                 barHandler("home");
+                Cookies.set("chosenUserId", "");
               }}
               className="w-10 cursor-pointer h-10 z-10"
               color={"#1E90FF"}
@@ -94,6 +95,7 @@ const Header: FC<props> = ({
           onClick={() => {
             barHandler("home");
             navigate(`/home/${currentUserInfo.name}` + currentUserInfo.surname);
+            Cookies.set("chosenUserId", "");
           }}
           className={`bar-pictures-container ${
             topBar === "home" ? "active-bar-color" : "inActive-bar-color"
@@ -108,6 +110,7 @@ const Header: FC<props> = ({
           onClick={() => {
             navigate("/watch");
             barHandler("video");
+            Cookies.set("chosenUserId", "");
           }}
           className={`bar-pictures-container ${
             topBar === "video" ? "active-bar-color" : "inActive-bar-color"
@@ -122,6 +125,7 @@ const Header: FC<props> = ({
           onClick={() => {
             navigate("/groups");
             barHandler("users");
+            Cookies.set("chosenUserId", "");
           }}
           className={`bar-pictures-container ${
             topBar === "users" ? "active-bar-color" : "inActive-bar-color"
