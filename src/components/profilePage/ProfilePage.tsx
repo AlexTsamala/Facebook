@@ -6,14 +6,22 @@ import {
   MessageSquare,
   CornerUpRight,
   MoreHorizontal,
+  Home,
+  MapPin,
+  Briefcase,
+  Clock,
 } from "react-feather";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCamera, faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCamera,
+  faUserPlus,
+  faGraduationCap,
+} from "@fortawesome/free-solid-svg-icons";
 import { FaFacebookMessenger } from "react-icons/fa";
 import "./profilePage.css";
 import CoverPhotoDropDown from "./EditCoverPhotoDropDown";
-import { ChangeEvent, useRef, useState } from "react";
-import { storage, oneUser } from "../../../fireBaseConfig";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { storage, oneUser, updatePost } from "../../../fireBaseConfig";
 import {
   ref,
   uploadBytesResumable,
@@ -37,7 +45,7 @@ import getTimeAgo from "../../helper/timeConverter";
 import earthImg from "../../assets/worldwide.png";
 import MoreButtonFunctional from "../mainPage/homePage/MoreButtonSection";
 import LikeImg from "../../assets/like.png";
-import { updatePost } from "../../../fireBaseConfig";
+import { PersonDto } from "../../dto/PersonDto";
 
 const ProfilePage = () => {
   const [clickOnLike, setClickOnLike] = useState<string>("#B0B3B8");
@@ -48,16 +56,22 @@ const ProfilePage = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [file, setFile] = useState<any>();
   const [imageUrl, setImageUrl] = useState<string>("");
+  const [searchedUserData, setSearchedUserData] = useState<PersonDto>();
   const userData = JSON.parse(Cookies.get("userData") || "")[0];
   const userId = JSON.parse(Cookies.get("userData") || "")[0].userId;
   const chosenUserId = Cookies.get("chosenUserId");
   const [clickedPostId, setClickedPostId] = useState<string>("");
   const fileInputRefProfile = useRef<HTMLInputElement>(null);
-  const currentCoverPhoto = userData.coverPhoto
-    ? userData.coverPhoto
-    : imageUrl
-    ? imageUrl
-    : coverPhoto;
+  let currentCoverPhoto;
+  if (chosenUserId) {
+    currentCoverPhoto = searchedUserData?.coverPhoto;
+  } else {
+    currentCoverPhoto = userData.coverPhoto
+      ? userData.coverPhoto
+      : imageUrl
+      ? imageUrl
+      : coverPhoto;
+  }
 
   const db = getFirestore();
   const colRefPosts = collection(db, "Posts");
@@ -81,6 +95,13 @@ const ProfilePage = () => {
 
     setPosts(filteredArr);
   });
+
+  const loadChosenUserData = async () => {
+    if (chosenUserId) {
+      const response = await oneUser(chosenUserId);
+      setSearchedUserData(response[0]);
+    }
+  };
 
   const handleChangeCoverPhoto = () => {
     const storageRef: StorageReference = ref(
@@ -193,6 +214,10 @@ const ProfilePage = () => {
       updatePost(postId, numberOfLikes - 1);
     }
   };
+  useEffect(() => {
+    loadChosenUserData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chosenUserId]);
 
   return (
     <div className="flex items-center flex-col">
@@ -245,7 +270,13 @@ const ProfilePage = () => {
             <img
               className="rounded-full w-44 h-44"
               alt="profile"
-              src={userData.profilePhoto ? userData.profilePhoto : blankPhoto}
+              src={
+                searchedUserData?.profilePhoto
+                  ? searchedUserData?.profilePhoto
+                  : userData.profilePhoto
+                  ? userData.profilePhoto
+                  : blankPhoto
+              }
             />
             <input
               type="file"
@@ -267,7 +298,9 @@ const ProfilePage = () => {
             </div>
             <div>
               <h1 className="text-white font-medium text-xl">
-                {userData.name + " " + userData.surname}
+                {searchedUserData
+                  ? searchedUserData.name + " " + searchedUserData.surname
+                  : userData.name + " " + userData.surname}
               </h1>
               <span className="friends-quantity-style font-medium ">
                 200 friends
@@ -309,85 +342,124 @@ const ProfilePage = () => {
           </div>
         </div>
       </div>
-      {posts?.map((post: PostDto) => {
-        return (
-          <div
-            key={post.id}
-            className="bg-postContainer mt-3 rounded-md relative"
-          >
-            <div className="flex justify-between items-center">
-              <div className="flex gap-2 p-2.5">
-                <img
-                  className="circle-styles cursor-pointer"
-                  alt="postAuthorPhoto"
-                  src={post.url}
-                />
-                <div>
-                  <h3 className="post-author-style">{post.name}</h3>
-                  <span className="post-time-style">
-                    {getTimeAgo(post.createdAt)}
+      <div className="w-full flex justify-center gap-5">
+        <div className="bg-postContainer w-pagesWidth mt-3 rounded-md p-3 flex flex-col gap-4 h-80">
+          <h1 className="text-white font-medium text-base">Intro</h1>
+          <div className="flex gap-2 items-center text-white">
+            <Briefcase color="#989898" />
+            <h2>Works as Full Stack Web Developer at Ecovis Georgia</h2>
+          </div>
+          <div className="flex gap-2 items-center text-white">
+            <FontAwesomeIcon
+              style={{
+                width: "18px",
+                height: "18px",
+                color: "#989898",
+              }}
+              icon={faGraduationCap}
+            />
+            <h2>
+              Studied at საქართველოს უნივერსიტეტი • The University Of Georgia
+            </h2>
+          </div>
+          <div className="flex gap-2 items-center text-white">
+            <Home color="#989898" />
+            <h2>Lives in Tbilisi, Georgia</h2>
+          </div>
+          <div className="flex gap-2 items-center text-white">
+            <MapPin color="#989898" />
+            <h2>From Tbilisi, Georgia</h2>
+          </div>
+          <div className="flex gap-2 items-center text-white">
+            <Clock color="#989898" />
+            <h2>Joined on November 2012</h2>
+          </div>
+        </div>
+        <div className="flex flex-col">
+          {posts?.map((post: PostDto) => {
+            return (
+              <div
+                key={post.id}
+                className=" w-pagesWidth bg-postContainer mt-3 rounded-md relative"
+              >
+                <div className="flex justify-between items-center">
+                  <div className="flex gap-2 p-2.5">
                     <img
-                      title="Public"
-                      className=" w-3 h-3"
-                      alt="earth"
-                      src={earthImg}
+                      className="circle-styles cursor-pointer"
+                      alt="postAuthorPhoto"
+                      src={post.url}
                     />
+                    <div>
+                      <h3 className="post-author-style">{post.name}</h3>
+                      <span className="post-time-style">
+                        {getTimeAgo(post.createdAt)}
+                        <img
+                          title="Public"
+                          className=" w-3 h-3"
+                          alt="earth"
+                          src={earthImg}
+                        />
+                      </span>
+                    </div>
+                  </div>
+
+                  {userId === post.userId ? (
+                    <div
+                      onClick={() => moreButtonHandler(post.id)}
+                      className="post-more-button mr-3"
+                    >
+                      <MoreHorizontal
+                        className=" cursor-pointer"
+                        color="#b0b3b8"
+                      />
+                    </div>
+                  ) : null}
+
+                  {clickedPostId === post.id ? (
+                    <MoreButtonFunctional postId={post.id} />
+                  ) : null}
+                </div>
+                <p className="post-description-style p-2.5">{post.title}</p>
+                {post.postPhoto.length > 0 ? (
+                  <img alt="postPhoto" src={post.postPhoto} />
+                ) : null}
+                <div className="flex gap-1 p-2.5">
+                  <img className="w-5 h-5" alt="like" src={LikeImg} />
+                  <span className="post-button-text-style text-sm">
+                    {post.reactions}
                   </span>
                 </div>
-              </div>
-
-              {userId === post.userId ? (
-                <div
-                  onClick={() => moreButtonHandler(post.id)}
-                  className="post-more-button mr-3"
-                >
-                  <MoreHorizontal className=" cursor-pointer" color="#b0b3b8" />
+                <div className="flex justify-around w-full mt-1 engagement-section">
+                  <div
+                    onClick={() => likeClickHandler(post.id, post.reactions)}
+                    className="flex gap-2 cursor-pointer post-buttons-style"
+                  >
+                    <ThumbsUp color={clickOnLike} />
+                    <span
+                      style={{ color: clickOnLike }}
+                      className="font-semibold post-button-text-style"
+                    >
+                      Like
+                    </span>
+                  </div>
+                  <div className="flex gap-2 cursor-pointer post-buttons-style">
+                    <MessageSquare color="#B0B3B8" />
+                    <span className="font-semibold post-button-text-style">
+                      Comment
+                    </span>
+                  </div>
+                  <div className="flex gap-2 cursor-pointer post-buttons-style">
+                    <CornerUpRight color="#B0B3B8" />
+                    <span className="font-semibold post-button-text-style">
+                      Share
+                    </span>
+                  </div>
                 </div>
-              ) : null}
-
-              {clickedPostId === post.id ? (
-                <MoreButtonFunctional postId={post.id} />
-              ) : null}
-            </div>
-            <p className="post-description-style p-2.5">{post.title}</p>
-            {post.postPhoto.length > 0 ? (
-              <img alt="postPhoto" src={post.postPhoto} />
-            ) : null}
-            <div className="flex gap-1 p-2.5">
-              <img className="w-5 h-5" alt="like" src={LikeImg} />
-              <span className="post-button-text-style text-sm">
-                {post.reactions}
-              </span>
-            </div>
-            <div className="flex justify-around w-full mt-1 engagement-section">
-              <div
-                onClick={() => likeClickHandler(post.id, post.reactions)}
-                className="flex gap-2 cursor-pointer post-buttons-style"
-              >
-                <ThumbsUp color={clickOnLike} />
-                <span
-                  style={{ color: clickOnLike }}
-                  className="font-semibold post-button-text-style"
-                >
-                  Like
-                </span>
               </div>
-              <div className="flex gap-2 cursor-pointer post-buttons-style">
-                <MessageSquare color="#B0B3B8" />
-                <span className="font-semibold post-button-text-style">
-                  Comment
-                </span>
-              </div>
-              <div className="flex gap-2 cursor-pointer post-buttons-style">
-                <CornerUpRight color="#B0B3B8" />
-                <span className="font-semibold post-button-text-style">
-                  Share
-                </span>
-              </div>
-            </div>
-          </div>
-        );
-      })}
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 };

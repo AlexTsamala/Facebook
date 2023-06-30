@@ -1,13 +1,14 @@
 import { FC, useState, RefObject } from "react";
 import { Home, Tv, Users, Bell, ArrowLeft } from "react-feather";
 import Cookies from "js-cookie";
-import Account from "./Account";
+import Account from "./accountFolder/Account";
 import { FaFacebookMessenger, FaFacebook } from "react-icons/fa";
 import SearchInputResult from "./searchInputFolder/SearchInputResult";
 import { PersonDto } from "../../../../dto/PersonDto";
 import { getAllUsers } from "../../../../../fireBaseConfig";
 import { useNavigate } from "react-router-dom";
 import blankPhoto from "../../../../assets/avatar-blank.png";
+import NotificationModal from "./notificationFolder/NotificationModal";
 
 interface props {
   setTopBar: (name: string) => void;
@@ -25,16 +26,18 @@ const Header: FC<props> = ({
   clickedPlace,
 }) => {
   const [messNotButtons, setMessNotButtons] = useState("");
+  const [searchInputValue, setSearchInputValue] = useState<string>("");
   const [accountOpen, setAccountOpen] = useState(false);
   const [usersData, setUsersData] = useState<PersonDto[]>([]);
   const navigate = useNavigate();
-  const profilePhoto = JSON.parse(Cookies.get("userData") || "")[0]
-    .profilePhoto;
-  const currentUserId = JSON.parse(Cookies.get("userData") || "")[0].userId;
-  const currentUserInfo = JSON.parse(Cookies.get("userData") || "")[0];
+  const userDataCookie = Cookies.get("userData");
+  const currentUserInfo = userDataCookie
+    ? JSON.parse(userDataCookie || "")[0]
+    : "";
   const InputValueHandler = (value: string) => {
+    setSearchInputValue(value);
     const data = getAllUsers.filter(
-      (user: PersonDto) => user.userId !== currentUserId
+      (user: PersonDto) => user.userId !== currentUserInfo.userId
     );
     const filteredData = data.filter((user: PersonDto) =>
       (user.name + " " + user.surname).includes(value)
@@ -82,12 +85,19 @@ const Header: FC<props> = ({
           onClick={() => {
             setSearchInputOpen(true);
           }}
+          value={searchInputValue}
           onChange={(event) => InputValueHandler(event?.target.value)}
           className="rounded-3xl facebook-search-styles"
           type="text"
           placeholder="Search Facebook"
         />
-        {searchInputOpen ? <SearchInputResult usersData={usersData} /> : null}
+        {searchInputOpen ? (
+          <SearchInputResult
+            usersData={usersData}
+            setSearchInputOpen={setSearchInputOpen}
+            setSearchInputValue={setSearchInputValue}
+          />
+        ) : null}
       </div>
       <div className="flex gap-20 justify-center items-center">
         <div
@@ -161,6 +171,7 @@ const Header: FC<props> = ({
           }}
         >
           <Bell color={"#ffffff"} />
+          <NotificationModal />
         </div>
         <img
           onClick={() => {
@@ -170,7 +181,11 @@ const Header: FC<props> = ({
           title="Account"
           className="circle-styles cursor-pointer"
           alt="current-user-img"
-          src={profilePhoto ? profilePhoto : blankPhoto}
+          src={
+            currentUserInfo.profilePhoto
+              ? currentUserInfo.profilePhoto
+              : blankPhoto
+          }
         />
         {accountOpen ? (
           <Account

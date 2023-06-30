@@ -8,7 +8,7 @@ import {
 } from "react-feather";
 import Cookies from "js-cookie";
 import "./account.css";
-import { signOutUser } from "../../../../../fireBaseConfig";
+import { signOutUser } from "../../../../../../fireBaseConfig";
 import { useNavigate } from "react-router-dom";
 import { FC } from "react";
 

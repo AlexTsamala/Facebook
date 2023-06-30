@@ -2,14 +2,26 @@ import "./searchInput.css";
 import { FC } from "react";
 import { PersonDto } from "../../../../../dto/PersonDto";
 import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 interface props {
   usersData: PersonDto[] | undefined;
+  setSearchInputOpen: (status: boolean) => void;
+  setSearchInputValue: (value: string) => void;
 }
 
-const SearchInputResult: FC<props> = ({ usersData }) => {
-  const chosenUserHandler = (chosenUserId: string) => {
-    Cookies.set("chosenUserId", chosenUserId);
+const SearchInputResult: FC<props> = ({
+  usersData,
+  setSearchInputOpen,
+  setSearchInputValue,
+}) => {
+  const navigate = useNavigate();
+
+  const chosenUserHandler = (chosenUser: PersonDto) => {
+    Cookies.set("chosenUserId", chosenUser.userId);
+    setSearchInputOpen(false);
+    navigate("/profilePage/" + chosenUser.name + chosenUser.surname);
+    setSearchInputValue("");
   };
   return (
     <div
@@ -20,7 +32,7 @@ const SearchInputResult: FC<props> = ({ usersData }) => {
       {usersData?.map((person: PersonDto) => {
         return (
           <div
-            onClick={() => chosenUserHandler(person.userId)}
+            onClick={() => chosenUserHandler(person)}
             key={person.name}
             className="flex gap-2 cursor-pointer post-buttons-style"
           >
