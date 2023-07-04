@@ -28,6 +28,7 @@ const Header: FC<props> = ({
   const [messNotButtons, setMessNotButtons] = useState("");
   const [searchInputValue, setSearchInputValue] = useState<string>("");
   const [accountOpen, setAccountOpen] = useState(false);
+  const [notificationModalIsOpen, setNotificationModalIsOpen] = useState(false);
   const [usersData, setUsersData] = useState<PersonDto[]>([]);
   const navigate = useNavigate();
   const userDataCookie = Cookies.get("userData");
@@ -152,8 +153,11 @@ const Header: FC<props> = ({
             messNotButtons === "messageBar" ? "circle-styles-active" : ""
           } `}
           onClick={() => {
-            setMessNotButtons("messageBar");
+            setMessNotButtons(
+              messNotButtons === "messageBar" ? "" : "messageBar"
+            );
             setAccountOpen(false);
+            setNotificationModalIsOpen(false);
           }}
         >
           <FaFacebookMessenger
@@ -166,17 +170,21 @@ const Header: FC<props> = ({
             messNotButtons === "notificationBar" ? "circle-styles-active" : ""
           } `}
           onClick={() => {
-            setMessNotButtons("notificationBar");
+            setMessNotButtons(
+              messNotButtons === "notificationBar" ? "" : "notificationBar"
+            );
             setAccountOpen(false);
+            setNotificationModalIsOpen(!notificationModalIsOpen);
           }}
         >
           <Bell color={"#ffffff"} />
-          <NotificationModal />
+          {notificationModalIsOpen ? <NotificationModal /> : null}
         </div>
         <img
           onClick={() => {
             setAccountOpen(!accountOpen);
             setMessNotButtons("");
+            setNotificationModalIsOpen(false);
           }}
           title="Account"
           className="circle-styles cursor-pointer"

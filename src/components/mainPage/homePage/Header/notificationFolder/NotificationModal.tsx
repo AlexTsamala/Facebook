@@ -18,9 +18,13 @@ const NotificationModal = () => {
               <span className="font-bold">Sandro Tsamalashvili</span> sent
               friend request
             </p>
-            <div>
-              <button type="button">Confirm</button>
-              <button type="button">Cancel</button>
+            <div className="flex gap-4 mt-2 mb-2">
+              <button className="bg-lime-900 p-1 rounded-lg" type="button">
+                Confirm
+              </button>
+              <button className=" bg-red-800 p-1 rounded-lg" type="button">
+                Cancel
+              </button>
             </div>
             <span className="time-ago-class text-xs">57 minutes ago</span>
           </div>
