@@ -21,7 +21,14 @@ import { FaFacebookMessenger } from "react-icons/fa";
 import "./profilePage.css";
 import CoverPhotoDropDown from "./EditCoverPhotoDropDown";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { storage, oneUser, updatePost } from "../../../fireBaseConfig";
+import {
+  storage,
+  oneUser,
+  updatePost,
+  addNotification,
+  oneNotification,
+  deleteNotification,
+} from "../../../fireBaseConfig";
 import {
   ref,
   uploadBytesResumable,
@@ -46,12 +53,14 @@ import earthImg from "../../assets/worldwide.png";
 import MoreButtonFunctional from "../mainPage/homePage/MoreButtonSection";
 import LikeImg from "../../assets/like.png";
 import { PersonDto } from "../../dto/PersonDto";
+import { NotificationDto } from "../../dto/NotificationDto";
 
 const ProfilePage = () => {
   const [clickOnLike, setClickOnLike] = useState<string>("#B0B3B8");
   const [coverDropDownIsOpen, setCoverDropDownIsOpen] =
     useState<boolean>(false);
   const [keepCoverIsOpen, setKeepCoverIsOpen] = useState<boolean>(false);
+  const [friendStatus, setFriendStatus] = useState<string>("Add friend");
   const [posts, setPosts] = useState<PostDto[]>();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [file, setFile] = useState<any>();
@@ -219,6 +228,66 @@ const ProfilePage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chosenUserId]);
 
+  const loadOneUser = async (userId: string) => {
+    const result = await oneUser(userId);
+    return result;
+  };
+
+  useEffect(() => {
+    const currentProfileOwner: string = chosenUserId ? chosenUserId : "";
+
+    const fetchNotificationData = () => {
+      const notification = oneNotification(userId, "senderId");
+      return notification;
+    };
+
+    fetchNotificationData().then((notification: NotificationDto[]) => {
+      const filteredNotification = notification.filter(
+        (item: NotificationDto) => item.ownerId === chosenUserId
+      )[0];
+      if (filteredNotification?.ownerId === chosenUserId) {
+        setFriendStatus("Cancel request");
+      }
+    });
+
+    const fetchUserData = async () => {
+      const response = await loadOneUser(currentProfileOwner);
+      return response;
+    };
+
+    fetchUserData().then((currentProfileOwnerData: PersonDto[]) => {
+      if (currentProfileOwnerData[0]?.friendsList?.includes(userId)) {
+        setFriendStatus("Friends");
+      }
+    });
+  }, [friendStatus, userId, chosenUserId]);
+
+  const addFriendHandler = async () => {
+    const currentProfileOwner: string = chosenUserId ? chosenUserId : "";
+    if (friendStatus === "Add friend") {
+      addNotification(
+        "sent friend request",
+        "Friend request",
+        chosenUserId,
+        userId,
+        userData.name + " " + userData.surname
+      );
+      setFriendStatus("Cancel request");
+    } else if (friendStatus === "Cancel request") {
+      const notification = await oneNotification(
+        currentProfileOwner,
+        "ownerId"
+      );
+
+      const notificationId = notification.filter(
+        (item) => item.senderId === userId
+      )[0].id;
+      const checkedNotificationId = notificationId ? notificationId : "";
+      deleteNotification(checkedNotificationId);
+      setFriendStatus("Add friend");
+    }
+  };
+
   return (
     <div className="flex items-center flex-col">
       <div className="w-full flex items-center justify-center flex-col bg-postContainer relative">
@@ -310,7 +379,11 @@ const ProfilePage = () => {
           <div className="flex items-center gap-2">
             {chosenUserId ? (
               <>
-                <div className="edit-profile-section edit-profile-section-color gap-1">
+                <button
+                  onClick={addFriendHandler}
+                  type="button"
+                  className="edit-profile-section edit-profile-section-color gap-1 text-xs"
+                >
                   <FontAwesomeIcon
                     style={{
                       width: "18px",
@@ -319,15 +392,15 @@ const ProfilePage = () => {
                     }}
                     icon={faUserPlus}
                   />
-                  Add friend
-                </div>
-                <div className="edit-profile-section add-friend-section-color gap-1">
+                  {friendStatus}
+                </button>
+                <button className="edit-profile-section add-friend-section-color gap-1">
                   <FaFacebookMessenger
                     color={"#ffffff"}
                     style={{ width: "18px", height: "18px" }}
                   />
                   Message
-                </div>
+                </button>
               </>
             ) : (
               <>

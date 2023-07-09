@@ -19,13 +19,13 @@
     cursor: pointer;
 }
 .edit-profile-section-color{
-    background-color: #2374E1;
+    background-color: #2374E1 !important;
 }
 .add-friend-section-color{
     background-color: #ffffff1A;
 }
 .edit-profile-section:hover{
-    background-color: 	#B8B8B8;
+    background-color: 	#B8B8B8 !important;
     transition: 0.5s;
 }
 .edit-cover-class{

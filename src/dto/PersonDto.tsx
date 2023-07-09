@@ -5,4 +5,5 @@ export interface PersonDto {
   profilePhoto: string;
   userId: string;
   coverPhoto: string;
+  friendsList: string[];
 }

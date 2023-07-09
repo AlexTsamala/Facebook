@@ -21,6 +21,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { getStorage } from "firebase/storage";
+import { NotificationDto } from "./src/dto/NotificationDto";
 
 export const firebaseConfig = {
   apiKey: "AIzaSyD8vnnCw4qF-_3X7mwkcFl5remrbfzffco",
@@ -105,6 +106,27 @@ export const oneUser = async (id: string) => {
   return users;
 };
 
+export const oneNotification = async (id: string, comparison: string) => {
+  const colRef = collection(db, "Notifications");
+  const q = query(colRef, where(comparison, "==", id));
+  const notifications: NotificationDto[] = [];
+  await getDocs(q)
+    .then((snapShot) => {
+      snapShot.docs.forEach((doc) => {
+        const notificationsData = doc.data() as NotificationDto;
+        const notification: NotificationDto = {
+          id: doc.id,
+          ...notificationsData,
+        };
+        notifications.push(notification);
+      });
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
+  return notifications;
+};
+
 export const addUser = () => {
   addDoc(colRef, {
     name: "ნინი",
@@ -113,6 +135,31 @@ export const addUser = () => {
   }).then((response) => {
     console.log(response);
   });
+};
+
+export const addNotification = (
+  notificationText: string,
+  type: string,
+  ownerId: string | undefined,
+  senderId: string,
+  senderName: string
+) => {
+  const colRef = collection(db, "Notifications");
+  addDoc(colRef, {
+    clicked: false,
+    description: notificationText,
+    notificationType: type,
+    ownerId: ownerId,
+    senderId: senderId,
+    senderName: senderName,
+    createdAt: serverTimestamp(),
+  })
+    .then((response) => {
+      console.log(response);
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
 };
 
 export const addPost = (
@@ -148,6 +195,13 @@ export const deleteUser = (userId: string) => {
 
 export const deletePost = (postId: string) => {
   const docRef = doc(db, "Posts", postId);
+  deleteDoc(docRef).then((response) => {
+    console.log(response);
+  });
+};
+
+export const deleteNotification = (NotificationId: string) => {
+  const docRef = doc(db, "Notifications", NotificationId);
   deleteDoc(docRef).then((response) => {
     console.log(response);
   });
