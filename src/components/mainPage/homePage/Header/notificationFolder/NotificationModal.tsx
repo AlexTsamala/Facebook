@@ -13,6 +13,7 @@ import { NotificationDto } from "../../../../../dto/NotificationDto";
 import getTimeAgo from "../../../../../helper/timeConverter";
 import {
   deleteNotification,
+  oneUser,
   updateNotification,
 } from "../../../../../../fireBaseConfig";
 import Cookies from "js-cookie";
@@ -49,6 +50,9 @@ const NotificationModal = () => {
       ? clickedNotification.id
       : "";
     deleteNotification(currentNotificationId);
+    oneUser(userData.userId).then((userArr) => {
+      Cookies.set("userData", JSON.stringify(userArr));
+    });
   };
 
   const cancelRequestHandler = (id: string) => {
