@@ -142,7 +142,8 @@ export const addNotification = (
   type: string,
   ownerId: string | undefined,
   senderId: string,
-  senderName: string
+  senderName: string,
+  profilePhoto: string
 ) => {
   const colRef = collection(db, "Notifications");
   addDoc(colRef, {
@@ -153,6 +154,7 @@ export const addNotification = (
     senderId: senderId,
     senderName: senderName,
     createdAt: serverTimestamp(),
+    profilePhoto: profilePhoto,
   })
     .then((response) => {
       console.log(response);
@@ -214,6 +216,41 @@ export const updatePost = (postId: string, numberOfLikes: number) => {
   }).then((response) => {
     console.log(response);
   });
+};
+
+export const updateNotification = async (
+  userId: string,
+  newFriendId: string
+) => {
+  const colRef = collection(db, "Users");
+  const q = query(colRef, where("userId", "==", userId));
+  const users: PersonDto[] = [];
+  await getDocs(q)
+    .then((snapShot) => {
+      snapShot.docs.forEach((doc) => {
+        const usersData = doc.data() as PersonDto;
+        const user: PersonDto = {
+          id: doc.id,
+          ...usersData,
+        };
+        users.push(user);
+      });
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
+
+  if (users.length > 0) {
+    const userId = users[0].id ? users[0].id : "";
+    const usersFriendList = users[0].friendsList ? users[0].friendsList : [];
+    usersFriendList.push(newFriendId);
+    const docRef = doc(db, "Users", userId);
+    updateDoc(docRef, {
+      friendsList: usersFriendList,
+    }).then((response) => {
+      console.log(response);
+    });
+  }
 };
 
 export const createUser = async (

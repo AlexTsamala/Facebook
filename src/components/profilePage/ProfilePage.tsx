@@ -64,6 +64,7 @@ const ProfilePage = () => {
   const [posts, setPosts] = useState<PostDto[]>();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [file, setFile] = useState<any>();
+  const [friendsList, setFriendsList] = useState<string[]>([]);
   const [imageUrl, setImageUrl] = useState<string>("");
   const [searchedUserData, setSearchedUserData] = useState<PersonDto>();
   const userData = JSON.parse(Cookies.get("userData") || "")[0];
@@ -262,6 +263,17 @@ const ProfilePage = () => {
     });
   }, [friendStatus, userId, chosenUserId]);
 
+  useEffect(() => {
+    if (chosenUserId) {
+      loadOneUser(chosenUserId).then((userData: PersonDto[]) => {
+        setFriendsList(userData[0].friendsList);
+      });
+    } else {
+      setFriendsList(userData.friendsList);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chosenUserId]);
+
   const addFriendHandler = async () => {
     const currentProfileOwner: string = chosenUserId ? chosenUserId : "";
     if (friendStatus === "Add friend") {
@@ -270,7 +282,8 @@ const ProfilePage = () => {
         "Friend request",
         chosenUserId,
         userId,
-        userData.name + " " + userData.surname
+        userData.name + " " + userData.surname,
+        userData.profilePhoto
       );
       setFriendStatus("Cancel request");
     } else if (friendStatus === "Cancel request") {
@@ -372,7 +385,8 @@ const ProfilePage = () => {
                   : userData.name + " " + userData.surname}
               </h1>
               <span className="friends-quantity-style font-medium ">
-                200 friends
+                {friendsList.length}
+                {friendsList.length > 1 ? " friends" : " friend"}
               </span>
             </div>
           </div>
