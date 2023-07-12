@@ -1,7 +1,7 @@
 import {} from "react-feather";
 import "../accountFolder/account.css";
 import "./notification.css";
-import { useState } from "react";
+import { FC, useState } from "react";
 import {
   collection,
   onSnapshot,
@@ -13,12 +13,11 @@ import { NotificationDto } from "../../../../../dto/NotificationDto";
 import getTimeAgo from "../../../../../helper/timeConverter";
 import {
   deleteNotification,
-  oneUser,
   updateNotification,
 } from "../../../../../../fireBaseConfig";
 import Cookies from "js-cookie";
 
-const NotificationModal = () => {
+const NotificationModal: FC = () => {
   const [data, setData] = useState<NotificationDto[]>([]);
   const userData = JSON.parse(Cookies.get("userData") || "")[0];
 
@@ -50,9 +49,6 @@ const NotificationModal = () => {
       ? clickedNotification.id
       : "";
     deleteNotification(currentNotificationId);
-    oneUser(userData.userId).then((userArr) => {
-      Cookies.set("userData", JSON.stringify(userArr));
-    });
   };
 
   const cancelRequestHandler = (id: string) => {
@@ -101,11 +97,11 @@ const NotificationModal = () => {
             </div>
           );
         })}
-        {data && (
+        {data.length === 0 ? (
           <h1 className="text-base text-white">
             You don't have any notification
           </h1>
-        )}
+        ) : null}
       </div>
     </>
   );

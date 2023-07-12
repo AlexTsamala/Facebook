@@ -9,6 +9,15 @@ import { getAllUsers } from "../../../../../fireBaseConfig";
 import { useNavigate } from "react-router-dom";
 import blankPhoto from "../../../../assets/avatar-blank.png";
 import NotificationModal from "./notificationFolder/NotificationModal";
+import {
+  collection,
+  onSnapshot,
+  getFirestore,
+  query,
+  orderBy,
+} from "firebase/firestore";
+import "./header.css";
+import { NotificationDto } from "../../../../dto/NotificationDto";
 
 interface props {
   setTopBar: (name: string) => void;
@@ -30,11 +39,32 @@ const Header: FC<props> = ({
   const [accountOpen, setAccountOpen] = useState(false);
   const [notificationModalIsOpen, setNotificationModalIsOpen] = useState(false);
   const [usersData, setUsersData] = useState<PersonDto[]>([]);
+  const [countNotifications, setCountNotifications] = useState<
+    NotificationDto[]
+  >([]);
   const navigate = useNavigate();
   const userDataCookie = Cookies.get("userData");
   const currentUserInfo = userDataCookie
     ? JSON.parse(userDataCookie || "")[0]
     : "";
+
+  const db = getFirestore();
+  const colRefPosts = collection(db, "Notifications");
+  const q = query(colRefPosts, orderBy("createdAt", "desc"));
+
+  onSnapshot(q, (snapShot) => {
+    const postsArr: NotificationDto[] = [];
+    snapShot.docs.forEach((doc) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const postsData = doc.data() as any;
+      const posts = { id: doc.id, ...postsData };
+      postsArr.push(posts);
+    });
+    setCountNotifications(
+      postsArr.filter((item) => item.ownerId === currentUserInfo.userId)
+    );
+  });
+
   const InputValueHandler = (value: string) => {
     setSearchInputValue(value);
     const data = getAllUsers.filter(
@@ -177,6 +207,12 @@ const Header: FC<props> = ({
             setNotificationModalIsOpen(!notificationModalIsOpen);
           }}
         >
+          {countNotifications.length > 0 ? (
+            <div className="flex justify-center items-center bg-red-700 text-white text-xs rounded-full w-5 h-5 absolute red-notification-circle">
+              {countNotifications.length}
+            </div>
+          ) : null}
+
           <Bell color={"#ffffff"} />
           {notificationModalIsOpen ? <NotificationModal /> : null}
         </div>

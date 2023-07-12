@@ -10,6 +10,11 @@ module.exports = {
       backgroundColor: {
         signUpColor: "#00a400",
         postContainer: "#303030",
+        messengerPhoto: "#484848",
+        messageBackground: "#0084FF",
+      },
+      textColor: {
+        headersColor: "#E4E6EB",
       },
       width: {
         pagesWidth: "500px",

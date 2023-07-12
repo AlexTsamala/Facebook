@@ -1,0 +1,37 @@
+.messenger-container-styles{
+    right:8%;
+    width:328px;
+    height:455px;
+    background-color: #242526;
+}
+.messages-container{
+    height: 370px;
+    overflow-y: auto;
+}
+.message-input{
+    background-color: #484848;
+    width:148px;
+    height: 36px;
+    border-radius: 20px;
+    padding: 6px;
+    outline: none;
+    resize: none;
+    color:#E4E6EB;
+    font-weight: 400;
+}
+.message-input::placeholder{
+    font-size:16px;
+    color:#B0B3B8;
+    font-weight: 400;
+}
+.message-input-extra-styles{
+    position: absolute;
+    right: 50px;
+    width:240px;
+    transition: 0.5s;
+}
+.test{
+    transition: 1s;
+    position: absolute;
+    right: 50px;
+}

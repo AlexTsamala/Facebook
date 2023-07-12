@@ -1,18 +1,20 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, FC } from "react";
 import "./friendsSection.css";
 import Cookies from "js-cookie";
 import { oneUser } from "../../../../../fireBaseConfig";
 import { PersonDto } from "../../../../dto/PersonDto";
+import Messenger from "../BottomMessanger/Messenger";
 
-const FriendsSection = () => {
+const FriendsSection: FC = () => {
   const [data, setData] = useState<PersonDto[]>([]);
+
   const userData = JSON.parse(Cookies.get("userData") || "");
 
-  const loadData = async () => {
+  const loadData = async (friendsArr: string[]) => {
     const friendsListArr: PersonDto[] = [];
-    if (userData[0].friendsList.length > 0) {
+    if (friendsArr.length > 0) {
       await Promise.all(
-        userData[0].friendsList.map(async (userId: string) => {
+        friendsArr.map(async (userId: string) => {
           await oneUser(userId).then(async (userArr) => {
             friendsListArr.push(userArr[0]);
           });
@@ -24,16 +26,25 @@ const FriendsSection = () => {
   };
 
   useEffect(() => {
-    loadData().then((result) => setData(result));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userData]);
+    const fetchData = async () => {
+      oneUser(userData[0].userId).then(async (response) => {
+        await loadData(response[0].friendsList).then((result) =>
+          setData(result)
+        );
+      });
+    };
+    fetchData();
+  }, [userData, data]);
 
   return (
     <div className="pages-margin flex flex-col">
       <h2 className="contacts-header-styles p-2">Contacts</h2>
       {data.map((contact) => {
         return (
-          <div className="flex items-center gap-2 p-2 cursor-pointer w-56 rounded-lg hover:bg-stone-600">
+          <div
+            key={contact.id}
+            className="flex items-center gap-2 p-2 cursor-pointer w-56 rounded-lg hover:bg-stone-600"
+          >
             <img
               className="w-9 h-9 rounded-full"
               alt="friend"
@@ -45,6 +56,7 @@ const FriendsSection = () => {
           </div>
         );
       })}
+      <Messenger />
     </div>
   );
 };
