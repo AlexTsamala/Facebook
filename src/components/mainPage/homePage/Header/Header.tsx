@@ -65,21 +65,22 @@ const Header: FC<props> = ({
     );
   });
 
-  const InputValueHandler = (value: string) => {
+  const InputValueHandler = async (value: string) => {
     setSearchInputValue(value);
-    const data = getAllUsers.filter(
-      (user: PersonDto) => user.userId !== currentUserInfo.userId
-    );
-    const filteredData = data.filter((user: PersonDto) =>
-      (user.name + " " + user.surname).includes(value)
-    );
-    if (value.length === 0) {
-      setUsersData([]);
-    } else {
-      setUsersData(filteredData);
-    }
+    await getAllUsers().then((response) => {
+      const data = response.filter(
+        (user: PersonDto) => user.userId !== currentUserInfo.userId
+      );
+      const filteredData = data.filter((user: PersonDto) =>
+        (user.name + " " + user.surname).includes(value)
+      );
+      if (value.length === 0) {
+        setUsersData([]);
+      } else {
+        setUsersData(filteredData);
+      }
+    });
   };
-
   const barHandler = (name: string) => {
     setTopBar(name);
   };

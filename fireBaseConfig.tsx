@@ -47,48 +47,53 @@ const colRef = collection(db, "Users");
 const colRefPosts = collection(db, "Posts");
 const colRefMessages = collection(db, "Messages");
 
-export const users = await getDocs(colRef)
-  .then((snapShot) => {
-    const users: UserDto[] = [];
-    snapShot.docs.forEach((doc) => {
-      const userData = doc.data() as UserDto;
-      const user: UserDto & dtoId = { id: doc.id, ...userData };
-      users.push(user);
+export const users = async () => {
+  const users: UserDto[] = [];
+  await getDocs(colRef)
+    .then((snapShot) => {
+      snapShot.docs.forEach((doc) => {
+        const userData = doc.data() as UserDto;
+        const user: UserDto & dtoId = { id: doc.id, ...userData };
+        users.push(user);
+      });
+    })
+    .catch((err) => {
+      console.log(err.message);
     });
-    return users;
-  })
-  .catch((err) => {
-    console.log(err.message);
-  });
+  return users;
+};
 
-export const posts = await getDocs(colRefPosts)
-  .then((snapShot) => {
-    const posts: any = [];
-    snapShot.docs.forEach((doc) => {
-      const postData = doc.data() as any;
-      const post = { id: doc.id, ...postData };
-      posts.push(post);
+export const posts = async () => {
+  const posts: any = [];
+  await getDocs(colRefPosts)
+    .then((snapShot) => {
+      snapShot.docs.forEach((doc) => {
+        const postData = doc.data() as any;
+        const post = { id: doc.id, ...postData };
+        posts.push(post);
+      });
+    })
+    .catch((err) => {
+      console.log(err.message);
     });
-    return posts;
-  })
-  .catch((err) => {
-    console.log(err.message);
-  });
+  return posts;
+};
 
-export const getAllUsers = await getDocs(colRef)
-  .then((snapShot) => {
-    const usersArr: any = [];
-    snapShot.docs.forEach((doc) => {
-      const usersData = doc.data() as any;
-      const users = { id: doc.id, ...usersData };
-      usersArr.push(users);
+export const getAllUsers = async () => {
+  const usersArr: any = [];
+  await getDocs(colRef)
+    .then((snapShot) => {
+      snapShot.docs.forEach((doc) => {
+        const usersData = doc.data() as any;
+        const users = { id: doc.id, ...usersData };
+        usersArr.push(users);
+      });
+    })
+    .catch((err) => {
+      console.log(err.message);
     });
-
-    return usersArr;
-  })
-  .catch((err) => {
-    console.log(err.message);
-  });
+  return usersArr;
+};
 
 export const oneUser = async (id: string) => {
   const q = query(colRef, where("userId", "==", id));
