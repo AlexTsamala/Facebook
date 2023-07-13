@@ -1,36 +1,73 @@
-.messenger-container-styles{
-    right:8%;
-    width:328px;
-    height:455px;
+.messenger-container-styles {
+    right: 8%;
+    width: 328px;
+    height: 455px;
     background-color: #242526;
 }
-.messages-container{
+
+.messages-container {
     height: 370px;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 7px;
 }
-.message-input{
+
+.message-header-styles{
+    border-bottom: 0.5px solid #3e4042;
+}
+
+.message-styles-current {
+    background-color: rgb(0, 132, 255);
+    color: #E4E6EB;
+    width: 250px;
+    align-self: flex-end;
+    margin: 5px 0;
+    padding: 6px 10px;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+.message-styles-other {
+    background-color: #3e4042;
+    color: #E4E6EB;
+    align-self: flex-start;
+    margin: 5px 0;
+    padding: 6px 10px;
+    border-top-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+.message-input {
     background-color: #484848;
-    width:148px;
+    width: 148px;
     height: 36px;
     border-radius: 20px;
     padding: 6px;
     outline: none;
     resize: none;
-    color:#E4E6EB;
+    color: #E4E6EB;
+    font-weight: 400;
+    padding-right: 30px;
+}
+
+.message-input::placeholder {
+    font-size: 16px;
+    color: #B0B3B8;
     font-weight: 400;
 }
-.message-input::placeholder{
-    font-size:16px;
-    color:#B0B3B8;
-    font-weight: 400;
-}
-.message-input-extra-styles{
+
+.message-input-extra-styles {
     position: absolute;
     right: 50px;
-    width:240px;
+    width: 240px;
     transition: 0.5s;
 }
-.test{
+
+.test {
     transition: 1s;
     position: absolute;
     right: 50px;

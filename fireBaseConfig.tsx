@@ -45,6 +45,7 @@ export const storage = getStorage(app);
 
 const colRef = collection(db, "Users");
 const colRefPosts = collection(db, "Posts");
+const colRefMessages = collection(db, "Messages");
 
 export const users = await getDocs(colRef)
   .then((snapShot) => {
@@ -179,6 +180,29 @@ export const addPost = (
     url: postAuthorImg,
     createdAt: serverTimestamp(),
     reactions: 0,
+  })
+    .then((response) => {
+      console.log(response);
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
+};
+
+export const addMessage = (
+  description: string,
+  senderId: string,
+  receiverId: string | undefined,
+  profilePhoto: string | undefined,
+  nameAndSurname: string
+) => {
+  addDoc(colRefMessages, {
+    message: description,
+    senderId: senderId,
+    receiverId: receiverId,
+    createdAt: serverTimestamp(),
+    profilePhoto: profilePhoto,
+    name: nameAndSurname,
   })
     .then((response) => {
       console.log(response);
