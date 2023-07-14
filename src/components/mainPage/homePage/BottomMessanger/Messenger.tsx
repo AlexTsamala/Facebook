@@ -72,7 +72,7 @@ const Messenger: FC<Props> = ({ chosenUser, setChosenUser }) => {
       message,
       userData.userId,
       chosenUser?.userId,
-      userData.profilePhoto,
+      userData.profilePhoto ? userData.profilePhoto : "",
       userData.name + " " + userData.surname
     );
     setMessage("");
