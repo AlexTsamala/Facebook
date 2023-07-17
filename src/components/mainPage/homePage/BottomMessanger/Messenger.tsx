@@ -150,7 +150,6 @@ const Messenger: FC<Props> = ({ chosenUser, setChosenUser }) => {
           })}
         </div>
       )}
-
       {minimizeMessenger ? null : (
         <div className="h-10 flex justify-between items-center pr-4 relative">
           <div className="flex justify-center items-center gap-3 pl-2">
