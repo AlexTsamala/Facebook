@@ -18,6 +18,7 @@ import {
 } from "firebase/firestore";
 import "./header.css";
 import { NotificationDto } from "../../../../dto/NotificationDto";
+import MessengerModal from "./messengerFolder/MessengerModal";
 
 interface props {
   setTopBar: (name: string) => void;
@@ -38,6 +39,7 @@ const Header: FC<props> = ({
   const [searchInputValue, setSearchInputValue] = useState<string>("");
   const [accountOpen, setAccountOpen] = useState(false);
   const [notificationModalIsOpen, setNotificationModalIsOpen] = useState(false);
+  const [messengerModalIsOpen, setMessengerModalIsOpen] = useState(false);
   const [usersData, setUsersData] = useState<PersonDto[]>([]);
   const [countNotifications, setCountNotifications] = useState<
     NotificationDto[]
@@ -189,12 +191,14 @@ const Header: FC<props> = ({
             );
             setAccountOpen(false);
             setNotificationModalIsOpen(false);
+            setMessengerModalIsOpen(!messengerModalIsOpen);
           }}
         >
           <FaFacebookMessenger
             color={"#ffffff"}
             style={{ width: "22px", height: "22px" }}
           />
+          {messengerModalIsOpen ? <MessengerModal /> : null}
         </div>
         <div
           className={`circle-styles cursor-pointer ${
@@ -205,6 +209,7 @@ const Header: FC<props> = ({
               messNotButtons === "notificationBar" ? "" : "notificationBar"
             );
             setAccountOpen(false);
+            setMessengerModalIsOpen(false);
             setNotificationModalIsOpen(!notificationModalIsOpen);
           }}
         >
@@ -221,6 +226,7 @@ const Header: FC<props> = ({
           onClick={() => {
             setAccountOpen(!accountOpen);
             setMessNotButtons("");
+            setMessengerModalIsOpen(false);
             setNotificationModalIsOpen(false);
           }}
           title="Account"

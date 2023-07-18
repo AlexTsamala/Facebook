@@ -1,4 +1,3 @@
-import {} from "react-feather";
 import "../accountFolder/account.css";
 import "./notification.css";
 import { FC, useState } from "react";
@@ -58,6 +57,9 @@ const NotificationModal: FC = () => {
   return (
     <>
       <div className="account-container p-3 rounded-lg absolute">
+        {data.length === 0 ? null : (
+          <h1 className="text-white text-xl font-medium">Notifications</h1>
+        )}
         {data.map((item: NotificationDto) => {
           return (
             <div

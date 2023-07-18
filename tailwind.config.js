@@ -11,6 +11,7 @@ module.exports = {
         signUpColor: "#00a400",
         postContainer: "#303030",
         messengerPhoto: "#484848",
+        modalItemsHoverColor: "#65676b",
         messageBackground: "#0084FF",
       },
       textColor: {
