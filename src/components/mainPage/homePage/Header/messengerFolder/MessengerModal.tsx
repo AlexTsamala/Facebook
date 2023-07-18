@@ -1,4 +1,3 @@
-import testImg from "../../../../../assets/სანდროწამალაშვილი.jpg";
 import {
   collection,
   onSnapshot,
