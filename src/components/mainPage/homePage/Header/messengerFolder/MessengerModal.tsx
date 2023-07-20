@@ -70,7 +70,7 @@ const MessengerModal = () => {
               />
               <div className="text-white">
                 <h1>{item.name + " " + item.surname}</h1>
-                <span>some text</span>
+                <span>Click to see all messages</span>
               </div>
             </div>
           </Fragment>
