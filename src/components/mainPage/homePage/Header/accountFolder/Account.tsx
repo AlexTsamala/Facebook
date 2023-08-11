@@ -11,6 +11,7 @@ import "./account.css";
 import { signOutUser } from "../../../../../../fireBaseConfig";
 import { useNavigate } from "react-router-dom";
 import { FC } from "react";
+import blankPhoto from "../../../../../assets/avatar-blank.png";
 
 interface props {
   onNavigateToProfile: () => void;
@@ -44,7 +45,7 @@ const Account: FC<props> = ({ onNavigateToProfile, closeAccount }) => {
             title="Account"
             className="circle-styles cursor-pointer"
             alt="current-user-img"
-            src={userData.profilePhoto}
+            src={userData.profilePhoto ? userData.profilePhoto : blankPhoto}
           />
           <h3>{userData.name + " " + userData.surname}</h3>
         </div>

@@ -385,8 +385,8 @@ const ProfilePage = () => {
                   : userData.name + " " + userData.surname}
               </h1>
               <span className="friends-quantity-style font-medium ">
-                {friendsList.length}
-                {friendsList.length > 1 ? " friends" : " friend"}
+                {friendsList?.length}
+                {friendsList?.length > 1 ? " friends" : " friend"}
               </span>
             </div>
           </div>
@@ -507,7 +507,7 @@ const ProfilePage = () => {
                   ) : null}
                 </div>
                 <p className="post-description-style p-2.5">{post.title}</p>
-                {post.postPhoto.length > 0 ? (
+                {post.postPhoto?.length > 0 ? (
                   <img alt="postPhoto" src={post.postPhoto} />
                 ) : null}
                 <div className="flex gap-1 p-2.5">
