@@ -3,6 +3,13 @@ interface createdAtObj {
   nanoseconds: number;
 }
 
+export interface commentDto {
+  comment: string;
+  profilePhoto: string;
+  name: string;
+  createdAt: Date;
+}
+
 export interface PostDto {
   name: string;
   postPhoto: string;
@@ -11,5 +18,6 @@ export interface PostDto {
   url: string;
   userId: string;
   id: string;
+  comments: commentDto[];
   createdAt: createdAtObj;
 }

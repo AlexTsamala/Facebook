@@ -28,6 +28,7 @@ import LeftSideBar from "./leftSideBar/LeftSideBar";
 import FriendsSection from "./friendsSectionFolder/FriendsSection";
 import { useNavigate } from "react-router-dom";
 import blankPhoto from "../../../assets/avatar-blank.png";
+import CommentsModal from "./Comments/CommentsModal";
 
 interface props {
   setTopBar: (barName: string) => void;
@@ -38,6 +39,7 @@ const Homepage: FC<props> = ({ setTopBar }) => {
   const [createIsOpen, setCreateIsOpen] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState("");
   const [clickedPostId, setClickedPostId] = useState<string>("");
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [posts, setPosts] = useState<PostDto[]>();
   const userData = JSON.parse(Cookies.get("userData") || "")[0];
   const userId = JSON.parse(Cookies.get("userData") || "")[0].userId;
@@ -191,9 +193,17 @@ const Homepage: FC<props> = ({ setTopBar }) => {
                 </div>
                 <div className="flex gap-2 cursor-pointer post-buttons-style">
                   <MessageSquare color="#B0B3B8" />
-                  <span className="font-semibold post-button-text-style">
+                  <span
+                    onClick={() => setIsOpen(true)}
+                    className="font-semibold post-button-text-style"
+                  >
                     Comment
                   </span>
+                  <CommentsModal
+                    postData={post}
+                    isOpen={isOpen}
+                    onCancel={() => setIsOpen(false)}
+                  />
                 </div>
                 <div className="flex gap-2 cursor-pointer post-buttons-style">
                   <CornerUpRight color="#B0B3B8" />

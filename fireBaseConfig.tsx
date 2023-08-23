@@ -22,6 +22,7 @@ import {
 } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 import { NotificationDto } from "./src/dto/NotificationDto";
+import { PostDto, commentDto } from "./src/dto/PostsDto";
 
 export const firebaseConfig = {
   apiKey: "AIzaSyD8vnnCw4qF-_3X7mwkcFl5remrbfzffco",
@@ -280,6 +281,34 @@ export const updateNotification = async (
       console.log(response);
     });
   }
+};
+
+export const addComment = async (postId: string, commentData: commentDto) => {
+  const colRef = collection(db, "Posts");
+  const q = query(colRef, where("__name__", "==", postId));
+  let allComments: commentDto[] = [];
+  await getDocs(q)
+    .then((snapShot) => {
+      snapShot.docs.forEach((doc) => {
+        const postsData = doc.data() as PostDto;
+        const post: PostDto = {
+          ...postsData,
+        };
+
+        allComments = post.comments;
+      });
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
+  allComments.push(commentData);
+
+  const docRef = doc(db, "Posts", postId);
+  updateDoc(docRef, {
+    comments: allComments,
+  }).then((response) => {
+    console.log(response);
+  });
 };
 
 export const createUser = async (
