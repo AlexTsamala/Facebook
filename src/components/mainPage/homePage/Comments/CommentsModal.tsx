@@ -16,7 +16,6 @@ import Cookies from "js-cookie";
 import getTimeAgo from "../../../../helper/timeConverter";
 import { addComment, updatePost } from "../../../../../fireBaseConfig";
 import MoreButtonFunctional from "../MoreButtonSection";
-import { serverTimestamp } from "firebase/firestore";
 
 interface Props {
   postData: PostDto;
