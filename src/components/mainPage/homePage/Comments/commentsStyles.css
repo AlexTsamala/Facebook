@@ -12,3 +12,11 @@
     font-weight: 400;
     padding-right: 30px;
 }
+.comment-styles{
+    background-color: #484848;
+    border-top-right-radius: 20px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    padding: 8px 12px;
+}

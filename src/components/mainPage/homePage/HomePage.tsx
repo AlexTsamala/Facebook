@@ -39,6 +39,7 @@ const Homepage: FC<props> = ({ setTopBar }) => {
   const [createIsOpen, setCreateIsOpen] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState("");
   const [clickedPostId, setClickedPostId] = useState<string>("");
+  const [clickedPost, setClickedPost] = useState<PostDto[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [posts, setPosts] = useState<PostDto[]>();
   const userData = JSON.parse(Cookies.get("userData") || "")[0];
@@ -194,16 +195,20 @@ const Homepage: FC<props> = ({ setTopBar }) => {
                 <div className="flex gap-2 cursor-pointer post-buttons-style">
                   <MessageSquare color="#B0B3B8" />
                   <span
-                    onClick={() => setIsOpen(true)}
+                    onClick={() => {
+                      setIsOpen(true), setClickedPost([post]);
+                    }}
                     className="font-semibold post-button-text-style"
                   >
                     Comment
                   </span>
-                  <CommentsModal
-                    postData={post}
-                    isOpen={isOpen}
-                    onCancel={() => setIsOpen(false)}
-                  />
+                  {isOpen ? (
+                    <CommentsModal
+                      postData={clickedPost}
+                      isOpen={isOpen}
+                      onCancel={() => setIsOpen(false)}
+                    />
+                  ) : null}
                 </div>
                 <div className="flex gap-2 cursor-pointer post-buttons-style">
                   <CornerUpRight color="#B0B3B8" />

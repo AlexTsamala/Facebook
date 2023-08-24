@@ -8,6 +8,7 @@ export interface commentDto {
   profilePhoto: string;
   name: string;
   createdAt: Date;
+  id: string;
 }
 
 export interface PostDto {

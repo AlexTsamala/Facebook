@@ -16,6 +16,7 @@ module.exports = {
       },
       textColor: {
         headersColor: "#E4E6EB",
+        commentButtons: "#B0B3B8",
       },
       width: {
         pagesWidth: "500px",
