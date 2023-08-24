@@ -125,6 +125,7 @@ const CreatePostModal: FC<Props> = ({
           getDownloadURL(uploadImage.snapshot.ref).then((url) => {
             const articleRef = collection(db, "Posts");
             const newArticle = {
+              comments: [],
               name: authorName,
               postPhoto: url,
               title: inputValue,

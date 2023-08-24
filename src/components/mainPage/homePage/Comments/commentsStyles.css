@@ -2,6 +2,13 @@
     background-color: #ffffff1a !important;
     background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23b4b7bd'%3E%3Cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3E%3C/svg%3E")!important;
 }
+.more-horizontal{
+    display: none;
+    cursor: pointer;
+}
+.comment-container:hover .more-horizontal{
+    display: block;
+}
 .comment-input{
     background-color: #484848;
     border-radius: 20px;
@@ -19,4 +26,17 @@
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
     padding: 8px 12px;
+}
+.comment-section-more{
+    background-color: #242526;
+    top: 40px;
+    box-shadow: 0px 0px 18px #242526;
+    right: -185px;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    padding: 5px 5px;
+    width: 344px;
+    gap: 5px;
 }

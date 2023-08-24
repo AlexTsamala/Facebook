@@ -1,4 +1,4 @@
-interface createdAtObj {
+export interface createdAtObj {
   seconds: number;
   nanoseconds: number;
 }
@@ -7,7 +7,7 @@ export interface commentDto {
   comment: string;
   profilePhoto: string;
   name: string;
-  createdAt: Date;
+  createdAt: createdAtObj | Date;
   id: string;
 }
 

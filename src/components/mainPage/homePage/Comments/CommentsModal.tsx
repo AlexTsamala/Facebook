@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
-import { PostDto, commentDto } from "../../../../dto/PostsDto";
+import { PostDto, commentDto, createdAtObj } from "../../../../dto/PostsDto";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -24,6 +24,7 @@ import getTimeAgo from "../../../../helper/timeConverter";
 import { addComment, updatePost } from "../../../../../fireBaseConfig";
 import MoreButtonFunctional from "../MoreButtonSection";
 import { v4 as uuidv4 } from "uuid";
+import MoreButtonCommentSection from "./MoreButtonComment";
 
 interface Props {
   postData: PostDto[];
@@ -34,6 +35,7 @@ interface Props {
 const CommentsModal: FC<Props> = ({ onCancel, isOpen, postData }) => {
   const [clickOnLike, setClickOnLike] = useState<string>("#B0B3B8");
   const [clickedPostId, setClickedPostId] = useState<string>("");
+  const [clickedCommentId, setClickedCommentId] = useState<string>("");
   const [commentText, setCommentText] = useState<string>("");
   const [allComments, setAllComments] = useState<commentDto[]>();
   const userId = JSON.parse(Cookies.get("userData") || "")[0].userId;
@@ -74,16 +76,26 @@ const CommentsModal: FC<Props> = ({ onCancel, isOpen, postData }) => {
   };
 
   const addCommentHandler = (postId: string) => {
-    const commentId = uuidv4();
-    const commentData: commentDto = {
-      comment: commentText,
-      name: userData.name + " " + userData.surname,
-      profilePhoto: userPhoto,
-      id: commentId,
-      createdAt: new Date(),
-    };
-    addComment(postId, commentData);
-    setCommentText("");
+    if (commentText.length > 0) {
+      const commentId = uuidv4();
+      const commentData: commentDto = {
+        comment: commentText,
+        name: userData.name + " " + userData.surname,
+        profilePhoto: userPhoto,
+        id: commentId,
+        createdAt: new Date(),
+      };
+      addComment(postId, commentData);
+      setCommentText("");
+    }
+  };
+
+  const commentMoreButton = (commentId: string) => {
+    if (commentId === clickedCommentId) {
+      setClickedCommentId("");
+    } else {
+      setClickedCommentId(commentId);
+    }
   };
 
   return (
@@ -174,21 +186,40 @@ const CommentsModal: FC<Props> = ({ onCancel, isOpen, postData }) => {
           <div className="flex flex-col gap-2">
             {allComments?.map((item, index) => {
               return (
-                <div key={index} className="flex gap-3">
+                <div key={index} className="flex gap-3 comment-container">
                   <img
                     className="w-8 h-8 rounded-full"
                     alt="userProfile"
                     src={item.profilePhoto}
                   />
                   <div>
-                    <div className="comment-styles">
-                      <h3 className="text-white text-sm">{item.name}</h3>
-                      <p className="text-white text-base">{item.comment}</p>
+                    <div className="flex gap-1 relative">
+                      <div className="comment-styles">
+                        <h3 className="text-white text-sm">{item.name}</h3>
+                        <p className="text-white text-base">{item.comment}</p>
+                      </div>
+                      <div
+                        onClick={() => commentMoreButton(item.id)}
+                        className="flex items-center justify-center w-7 h-7 self-center"
+                      >
+                        <MoreHorizontal
+                          className="more-horizontal"
+                          color="#b0b3b8"
+                        />
+                      </div>
+                      {clickedCommentId === item.id ? (
+                        <MoreButtonCommentSection
+                          commentId={item.id}
+                          allComments={allComments}
+                          postId={postData[0].id}
+                          setClickedCommentId={setClickedCommentId}
+                        />
+                      ) : null}
                     </div>
                     <div className="text-commentButtons text-xs flex gap-3 ml-1">
                       <span className="font-bold cursor-pointer">Like</span>
                       <span className="font-bold cursor-pointer">Reply</span>
-                      <span>2d</span>
+                      <span>{getTimeAgo(item.createdAt as createdAtObj)}</span>
                     </div>
                   </div>
                 </div>

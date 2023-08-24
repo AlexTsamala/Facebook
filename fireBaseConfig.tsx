@@ -248,6 +248,21 @@ export const updatePost = (postId: string, numberOfLikes: number) => {
   });
 };
 
+export const deleteComment = async (
+  postId: string,
+  allComments: commentDto[],
+  commentId: string
+) => {
+  const newArr = allComments.filter((comment) => comment.id !== commentId);
+
+  const docRef = doc(db, "Posts", postId);
+  updateDoc(docRef, {
+    comments: newArr,
+  }).then((response) => {
+    console.log(response);
+  });
+};
+
 export const updateNotification = async (
   userId: string,
   newFriendId: string
