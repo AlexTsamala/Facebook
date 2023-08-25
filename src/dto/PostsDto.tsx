@@ -9,6 +9,7 @@ export interface commentDto {
   name: string;
   createdAt: createdAtObj | Date;
   id: string;
+  userId: string;
 }
 
 export interface PostDto {

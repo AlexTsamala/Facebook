@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { useRef, FC, useState } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { PostDto, commentDto, createdAtObj } from "../../../../dto/PostsDto";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -45,6 +45,7 @@ const CommentsModal: FC<Props> = ({ onCancel, isOpen, postData }) => {
   const db = getFirestore();
   const colRefPosts = collection(db, "Posts");
   const q = query(colRefPosts, where("__name__", "==", postData[0].id));
+  const addCommentRef = useRef(null);
 
   onSnapshot(q, (snapShot) => {
     const postsArr: PostDto[] = [];
@@ -54,6 +55,7 @@ const CommentsModal: FC<Props> = ({ onCancel, isOpen, postData }) => {
       const posts = { id: doc.id, ...postsData };
       postsArr.push(posts);
     });
+
     setAllComments(postsArr[0].comments);
   });
 
@@ -83,6 +85,7 @@ const CommentsModal: FC<Props> = ({ onCancel, isOpen, postData }) => {
         name: userData.name + " " + userData.surname,
         profilePhoto: userPhoto,
         id: commentId,
+        userId: userId,
         createdAt: new Date(),
       };
       addComment(postId, commentData);
@@ -95,6 +98,14 @@ const CommentsModal: FC<Props> = ({ onCancel, isOpen, postData }) => {
       setClickedCommentId("");
     } else {
       setClickedCommentId(commentId);
+    }
+  };
+
+  const enterButtonTextArea = (
+    event: React.KeyboardEvent<HTMLTextAreaElement>
+  ) => {
+    if (event.key === "Enter" && commentText.length > 0) {
+      addCommentHandler(postData[0].id);
     }
   };
 
@@ -198,15 +209,17 @@ const CommentsModal: FC<Props> = ({ onCancel, isOpen, postData }) => {
                         <h3 className="text-white text-sm">{item.name}</h3>
                         <p className="text-white text-base">{item.comment}</p>
                       </div>
-                      <div
-                        onClick={() => commentMoreButton(item.id)}
-                        className="flex items-center justify-center w-7 h-7 self-center"
-                      >
-                        <MoreHorizontal
-                          className="more-horizontal"
-                          color="#b0b3b8"
-                        />
-                      </div>
+                      {item.userId === userId ? (
+                        <div
+                          onClick={() => commentMoreButton(item.id)}
+                          className="flex items-center justify-center w-7 h-7 self-center"
+                        >
+                          <MoreHorizontal
+                            className="more-horizontal"
+                            color="#b0b3b8"
+                          />
+                        </div>
+                      ) : null}
                       {clickedCommentId === item.id ? (
                         <MoreButtonCommentSection
                           commentId={item.id}
@@ -240,10 +253,12 @@ const CommentsModal: FC<Props> = ({ onCancel, isOpen, postData }) => {
           cols={50}
           rows={4}
           value={commentText}
+          onKeyDown={enterButtonTextArea}
           onChange={(event) => setCommentText(event.target.value)}
         />
         <div className="hover:bg-messengerPhoto w-7 h-7 rounded-full flex items-center justify-center absolute bottom-6 right-8">
           <FontAwesomeIcon
+            ref={addCommentRef}
             onClick={() => addCommentHandler(postData[0].id)}
             style={{
               color: `${commentText.length > 0 ? "#0084FF" : "#65676b"}`,

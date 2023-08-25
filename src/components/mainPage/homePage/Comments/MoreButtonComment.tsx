@@ -28,11 +28,9 @@ const MoreButtonCommentSection: FC<Props> = ({
       </div>
       <div
         onClick={deleteHandler}
-        className="flex gap-2 post-buttons-style w-full"
+        className="flex gap-2 post-buttons-style w-full cursor-pointer"
       >
-        <span className="font-semibold post-button-text-style cursor-pointer">
-          Delete
-        </span>
+        <span className="font-semibold post-button-text-style ">Delete</span>
       </div>
       <QuestionModal
         yesFunction={() => {
