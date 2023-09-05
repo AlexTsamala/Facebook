@@ -8,6 +8,7 @@ interface Props {
   allComments: commentDto[];
   postId: string;
   setClickedCommentId: (id: string) => void;
+  setEditButtonId: (id: string) => void;
 }
 
 const MoreButtonCommentSection: FC<Props> = ({
@@ -15,6 +16,7 @@ const MoreButtonCommentSection: FC<Props> = ({
   postId,
   allComments,
   setClickedCommentId,
+  setEditButtonId,
 }) => {
   const [createIsOpen, setCreateIsOpen] = useState<boolean>(false);
 
@@ -23,7 +25,12 @@ const MoreButtonCommentSection: FC<Props> = ({
   };
   return (
     <div className="comment-section-more z-10">
-      <div className="flex gap-2 post-buttons-style w-full cursor-pointer">
+      <div
+        onClick={() => {
+          setEditButtonId(commentId), setClickedCommentId("");
+        }}
+        className="flex gap-2 post-buttons-style w-full cursor-pointer"
+      >
         <span className="font-semibold post-button-text-style">Edit</span>
       </div>
       <div

@@ -37,7 +37,9 @@ const CommentsModal: FC<Props> = ({ onCancel, isOpen, postData }) => {
   const [clickedPostId, setClickedPostId] = useState<string>("");
   const [clickedCommentId, setClickedCommentId] = useState<string>("");
   const [commentText, setCommentText] = useState<string>("");
+  const [editCommentText, setEditCommentText] = useState<string>("");
   const [allComments, setAllComments] = useState<commentDto[]>();
+  const [editButtonId, setEditButtonId] = useState<string>("");
   const userId = JSON.parse(Cookies.get("userData") || "")[0].userId;
   const userPhoto = JSON.parse(Cookies.get("userData") || "")[0].profilePhoto;
   const userData = JSON.parse(Cookies.get("userData") || "")[0];
@@ -205,13 +207,60 @@ const CommentsModal: FC<Props> = ({ onCancel, isOpen, postData }) => {
                   />
                   <div>
                     <div className="flex gap-1 relative">
-                      <div className="comment-styles">
-                        <h3 className="text-white text-sm">{item.name}</h3>
-                        <p className="text-white text-base">{item.comment}</p>
+                      <div className="comment-styles w-editCommentWidth">
+                        {editButtonId === item.id ? (
+                          <>
+                            <textarea
+                              className="comment-input relative w-editCommentTextAreaWidth"
+                              placeholder="Write a comment..."
+                              cols={50}
+                              rows={4}
+                              value={editCommentText}
+                              onKeyDown={enterButtonTextArea}
+                              onChange={(event) =>
+                                setEditCommentText(event.target.value)
+                              }
+                            />
+                            <div className="hover:bg-messengerPhoto w-7 h-7 rounded-full flex items-center justify-center absolute bottom-6 right-8">
+                              <FontAwesomeIcon
+                                ref={addCommentRef}
+                                onClick={() =>
+                                  addCommentHandler(postData[0].id)
+                                }
+                                style={{
+                                  color: `${
+                                    editCommentText.length > 0
+                                      ? "#0084FF"
+                                      : "#65676b"
+                                  }`,
+                                  width: "20px",
+                                  height: "20px",
+                                  rotate: "45deg",
+                                }}
+                                className={
+                                  editCommentText.length > 0
+                                    ? "cursor-pointer "
+                                    : ""
+                                }
+                                icon={faPaperPlane}
+                              />
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <h3 className="text-white text-sm">{item.name}</h3>
+                            <p className="text-white text-base">
+                              {item.comment}
+                            </p>
+                          </>
+                        )}
                       </div>
                       {item.userId === userId ? (
                         <div
-                          onClick={() => commentMoreButton(item.id)}
+                          onClick={() => {
+                            commentMoreButton(item.id),
+                              setEditCommentText(item.comment);
+                          }}
                           className="flex items-center justify-center w-7 h-7 self-center"
                         >
                           <MoreHorizontal
@@ -222,6 +271,7 @@ const CommentsModal: FC<Props> = ({ onCancel, isOpen, postData }) => {
                       ) : null}
                       {clickedCommentId === item.id ? (
                         <MoreButtonCommentSection
+                          setEditButtonId={setEditButtonId}
                           commentId={item.id}
                           allComments={allComments}
                           postId={postData[0].id}

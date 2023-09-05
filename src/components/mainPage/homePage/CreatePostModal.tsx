@@ -11,7 +11,6 @@ import {
   MoreHorizontal,
   CheckCircle,
 } from "react-feather";
-import profileImg from "../../../assets/სანდროწამალაშვილი.jpg";
 import earthImg from "../../../assets/worldwide.png";
 import Cookies from "js-cookie";
 import EmojiPicker, { EmojiStyle, Theme } from "emoji-picker-react";
@@ -178,7 +177,7 @@ const CreatePostModal: FC<Props> = ({
           <img
             className="circle-styles cursor-pointer"
             alt="current-user-img"
-            src={profileImg}
+            src={profilePhoto}
           />
           <div>
             <h3 className="text-white">{userName + " " + surName}</h3>
