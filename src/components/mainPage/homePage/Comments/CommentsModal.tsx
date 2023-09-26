@@ -21,7 +21,11 @@ import earthImg from "../../../../assets/worldwide.png";
 import LikeImg from "../../../../assets/like.png";
 import Cookies from "js-cookie";
 import getTimeAgo from "../../../../helper/timeConverter";
-import { addComment, updatePost } from "../../../../../fireBaseConfig";
+import {
+  addComment,
+  updateComment,
+  updatePost,
+} from "../../../../../fireBaseConfig";
 import MoreButtonFunctional from "../MoreButtonSection";
 import { v4 as uuidv4 } from "uuid";
 import MoreButtonCommentSection from "./MoreButtonComment";
@@ -48,7 +52,7 @@ const CommentsModal: FC<Props> = ({ onCancel, isOpen, postData }) => {
   const colRefPosts = collection(db, "Posts");
   const q = query(colRefPosts, where("__name__", "==", postData[0].id));
   const addCommentRef = useRef(null);
-
+  const editTextAreaRef = useRef(null);
   onSnapshot(q, (snapShot) => {
     const postsArr: PostDto[] = [];
     snapShot.docs.forEach((doc) => {
@@ -111,8 +115,37 @@ const CommentsModal: FC<Props> = ({ onCancel, isOpen, postData }) => {
     }
   };
 
+  const enterButtonEditTextArea = (
+    event: React.KeyboardEvent<HTMLTextAreaElement>,
+    commentId: string
+  ) => {
+    if (event.key === "Enter" && commentText.length > 0) {
+      editCommentHandler(commentId);
+    }
+  };
+
+  const editCommentHandler = (commentId: string) => {
+    const comments = allComments ? allComments?.slice() : [];
+    const currentCommentIndex = comments.findIndex(
+      (item) => item.id === commentId
+    );
+    comments[currentCommentIndex].comment = editCommentText;
+    setAllComments(comments);
+    updateComment(postData[0].id, comments);
+    setEditButtonId("");
+  };
+
   return (
-    <Modal isOpen={isOpen} toggle={onCancel} className="bg-postContainer">
+    <Modal
+      onClick={(event) => {
+        if (editButtonId && editTextAreaRef.current !== event.target) {
+          setEditButtonId("");
+        }
+      }}
+      isOpen={isOpen}
+      toggle={onCancel}
+      className="bg-postContainer"
+    >
       <ModalHeader
         toggle={onCancel}
         className="custom-modal bg-postContainer text-white"
@@ -216,17 +249,18 @@ const CommentsModal: FC<Props> = ({ onCancel, isOpen, postData }) => {
                               cols={50}
                               rows={4}
                               value={editCommentText}
-                              onKeyDown={enterButtonTextArea}
+                              onKeyDown={(event) =>
+                                enterButtonEditTextArea(event, item.id)
+                              }
                               onChange={(event) =>
                                 setEditCommentText(event.target.value)
                               }
+                              ref={editTextAreaRef}
                             />
-                            <div className="hover:bg-messengerPhoto w-7 h-7 rounded-full flex items-center justify-center absolute bottom-6 right-8">
+                            <div className="hover:bg-messengerPhoto w-7 h-7 rounded-full flex items-center justify-center absolute bottom-3 right-10">
                               <FontAwesomeIcon
                                 ref={addCommentRef}
-                                onClick={() =>
-                                  addCommentHandler(postData[0].id)
-                                }
+                                onClick={() => editCommentHandler(item.id)}
                                 style={{
                                   color: `${
                                     editCommentText.length > 0

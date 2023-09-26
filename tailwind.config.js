@@ -21,7 +21,7 @@ module.exports = {
       width: {
         pagesWidth: "500px",
         postInputWidth: "420px",
-        editCommentWidth: "410px",
+        editCommentWidth: "400px",
         editCommentTextAreaWidth: "380px",
       },
       height: {

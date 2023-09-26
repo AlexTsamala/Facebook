@@ -244,7 +244,7 @@ export const updatePost = (postId: string, numberOfLikes: number) => {
   updateDoc(docRef, {
     reactions: numberOfLikes,
   }).then((response) => {
-    console.log(response);
+    return response;
   });
 };
 
@@ -259,7 +259,19 @@ export const deleteComment = async (
   updateDoc(docRef, {
     comments: newArr,
   }).then((response) => {
-    console.log(response);
+    return response;
+  });
+};
+
+export const updateComment = async (
+  postId: string,
+  allComments: commentDto[]
+) => {
+  const docRef = doc(db, "Posts", postId);
+  updateDoc(docRef, {
+    comments: allComments,
+  }).then((response) => {
+    return response;
   });
 };
 
@@ -282,7 +294,7 @@ export const updateNotification = async (
       });
     })
     .catch((err) => {
-      console.log(err.message);
+      return err.message;
     });
 
   if (users.length > 0) {
@@ -293,7 +305,7 @@ export const updateNotification = async (
     updateDoc(docRef, {
       friendsList: usersFriendList,
     }).then((response) => {
-      console.log(response);
+      return response;
     });
   }
 };
@@ -314,7 +326,7 @@ export const addComment = async (postId: string, commentData: commentDto) => {
       });
     })
     .catch((err) => {
-      console.log(err.message);
+      return err.message;
     });
   allComments.push(commentData);
 
@@ -322,7 +334,7 @@ export const addComment = async (postId: string, commentData: commentDto) => {
   updateDoc(docRef, {
     comments: allComments,
   }).then((response) => {
-    console.log(response);
+    return response;
   });
 };
 
