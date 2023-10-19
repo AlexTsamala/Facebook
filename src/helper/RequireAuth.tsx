@@ -8,7 +8,7 @@ interface IRequireAuthProps {
 const RequireAuth = ({ children }: IRequireAuthProps) => {
   const token = Cookies.get("userToken");
   const location = useLocation();
-  console.log(token);
+
   if (!token) {
     return <Navigate to={"/log-in"} state={{ from: location }} />;
   }
