@@ -8,6 +8,7 @@ import GroupPage from "./components/mainPage/groupsPage/GroupsPage";
 import VideoPage from "./components/mainPage/videoPage/VideoPage";
 import ProfilePage from "./components/profilePage/ProfilePage";
 import { useLocation } from "react-router-dom";
+import RequireAuth from "./helper/RequireAuth";
 
 function App() {
   const [searchInputOpen, setSearchInputOpen] = useState(false);
@@ -35,16 +36,39 @@ function App() {
         <Route
           path="/home/:name"
           element={
-            <MainPage
-              setSearchInputOpen={setSearchInputOpen}
-              setTopBar={setTopBar}
-              clickedPlace={clickedPlace}
-            />
+            <RequireAuth>
+              <MainPage
+                setSearchInputOpen={setSearchInputOpen}
+                setTopBar={setTopBar}
+                clickedPlace={clickedPlace}
+              />
+            </RequireAuth>
           }
         />
-        <Route path="/groups" element={<GroupPage />} />
-        <Route path="/watch" element={<VideoPage />} />
-        <Route path="/profilePage/:name" element={<ProfilePage />} />
+        <Route
+          path="/groups"
+          element={
+            <RequireAuth>
+              <GroupPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/watch"
+          element={
+            <RequireAuth>
+              <VideoPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/profilePage/:name"
+          element={
+            <RequireAuth>
+              <ProfilePage />
+            </RequireAuth>
+          }
+        />
       </Routes>
     </div>
   );
