@@ -7,6 +7,7 @@ import { signInUser, oneUser } from "../../../fireBaseConfig";
 import { useNavigate } from "react-router-dom";
 import { FC, useState } from "react";
 import Cookies from "js-cookie";
+import ForgotPasswordModal from "./forgotPassword/ForgotPasswordModal";
 
 interface LogInDto {
   user: string;
@@ -46,6 +47,8 @@ const LoginPage: FC = () => {
     setLoading(false);
   };
   const [createIsOpen, setCreateIsOpen] = useState<boolean>(false);
+  const [passwordChangeIsOpen, setPasswordChangeIsOpen] =
+    useState<boolean>(false);
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
 
   const togglePasswordVisibility = () => {
@@ -100,9 +103,13 @@ const LoginPage: FC = () => {
             "Log in"
           )}
         </button>
-        <a className="forgot-password-link" href="">
+        <button
+          onClick={() => setPasswordChangeIsOpen(true)}
+          className="forgot-password-link"
+          type="button"
+        >
           Forgotten password ?
-        </a>
+        </button>
         <hr className="hr-line" />
         <button
           onClick={() => setCreateIsOpen(true)}
@@ -113,6 +120,10 @@ const LoginPage: FC = () => {
         </button>
       </form>
       <ResentLogIns />
+      <ForgotPasswordModal
+        isOpen={passwordChangeIsOpen}
+        onCancel={() => setPasswordChangeIsOpen(false)}
+      />
       <CreateAccountModal
         isOpen={createIsOpen}
         onCancel={() => setCreateIsOpen(false)}
